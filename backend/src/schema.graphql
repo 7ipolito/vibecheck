@@ -1,0 +1,111 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  _id: ID!
+  clerkUserId: String!
+  username: String!
+  image: String!
+  email: String!
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Comment {
+  text: String!
+  user: User!
+  createdAt: DateTime!
+}
+
+type ErrorTypeDelete {
+  path: String!
+  message: String!
+}
+
+type DeleteResponse {
+  error: [ErrorTypeDelete!]
+}
+
+type Post {
+  id: ID!
+  body: String!
+  countLikes: Float!
+  countComments: Float!
+  createdAt: String!
+  user: User!
+  likes: [User!]
+  comments: [Comment!]
+}
+
+type ErrorTypeCreatePost {
+  path: String!
+  message: String!
+}
+
+type ErrorTypeLikePost {
+  path: String!
+  message: String!
+}
+
+type ErrorType {
+  path: String!
+  message: String!
+}
+
+type RegisterResponse {
+  error: [ErrorType!]
+}
+
+type Query {
+  whoami(whoamiInput: WhoamiInput!): User!
+  posts: [Post!]!
+  getAllComments(postId: String!): [Comment!]!
+}
+
+input WhoamiInput {
+  userId: String!
+}
+
+type Mutation {
+  deleteUser(deleteInput: DeleteInput!): DeleteResponse!
+  createPost(createPostInput: CreatePostInput!): Post!
+  likePost(likePostInput: LikePostInput!): Post!
+  addComment(addCommentInput: AddCommentInput!): Post!
+  register(registerInput: RegisterInput!): RegisterResponse!
+}
+
+input DeleteInput {
+  id: String!
+}
+
+input CreatePostInput {
+  body: String!
+  clerkUserId: String!
+}
+
+input LikePostInput {
+  postId: String!
+  userId: String!
+}
+
+input AddCommentInput {
+  postId: String!
+  userId: String!
+  text: String!
+}
+
+input RegisterInput {
+  clerkUserId: String!
+  username: String!
+  image: String
+  email: String!
+}
+
+type Subscription {
+  commentAdded(postId: String!): Post!
+}
