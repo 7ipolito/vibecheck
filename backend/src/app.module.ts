@@ -5,8 +5,8 @@ import { join } from 'path';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
-import { PostsModule } from './modules/posts/posts.module';
 import { RegisterModule } from './modules/register/register.module';
+import { PostsModule } from './modules/events/posts.module';
 
 @Module({
   imports: [
@@ -52,7 +52,6 @@ import { RegisterModule } from './modules/register/register.module';
     UsersModule,
     PostsModule,
     RegisterModule,
-    PostsModule,
   ],
 })
 export class AppModule {}

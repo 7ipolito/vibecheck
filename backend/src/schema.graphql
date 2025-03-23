@@ -16,12 +16,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Comment {
-  text: String!
-  user: User!
-  createdAt: DateTime!
-}
-
 type ErrorTypeDelete {
   path: String!
   message: String!
@@ -29,27 +23,6 @@ type ErrorTypeDelete {
 
 type DeleteResponse {
   error: [ErrorTypeDelete!]
-}
-
-type Post {
-  id: ID!
-  body: String!
-  countLikes: Float!
-  countComments: Float!
-  createdAt: String!
-  user: User!
-  likes: [User!]
-  comments: [Comment!]
-}
-
-type ErrorTypeCreatePost {
-  path: String!
-  message: String!
-}
-
-type ErrorTypeLikePost {
-  path: String!
-  message: String!
 }
 
 type ErrorType {
@@ -61,10 +34,24 @@ type RegisterResponse {
   error: [ErrorType!]
 }
 
+type Post {
+  id: ID!
+  name: String!
+  description: String!
+  additionalImages: String!
+  text: String!
+  createdAt: String!
+  user: User!
+}
+
+type ErrorTypeCreatePost {
+  path: String!
+  message: String!
+}
+
 type Query {
   whoami(whoamiInput: WhoamiInput!): User!
   posts: [Post!]!
-  getAllComments(postId: String!): [Comment!]!
 }
 
 input WhoamiInput {
@@ -73,9 +60,7 @@ input WhoamiInput {
 
 type Mutation {
   deleteUser(deleteInput: DeleteInput!): DeleteResponse!
-  createPost(createPostInput: CreatePostInput!): Post!
-  likePost(likePostInput: LikePostInput!): Post!
-  addComment(addCommentInput: AddCommentInput!): Post!
+  createPost(createPostInput: CreateFullyPostDto!): Post!
   register(registerInput: RegisterInput!): RegisterResponse!
 }
 
@@ -83,20 +68,10 @@ input DeleteInput {
   id: String!
 }
 
-input CreatePostInput {
-  body: String!
-  clerkUserId: String!
-}
-
-input LikePostInput {
-  postId: String!
-  userId: String!
-}
-
-input AddCommentInput {
-  postId: String!
-  userId: String!
-  text: String!
+input CreateFullyPostDto {
+  name: String!
+  description: String!
+  image: String!
 }
 
 input RegisterInput {
@@ -104,8 +79,4 @@ input RegisterInput {
   username: String!
   image: String
   email: String!
-}
-
-type Subscription {
-  commentAdded(postId: String!): Post!
 }
