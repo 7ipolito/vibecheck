@@ -5,12 +5,11 @@ import { UserDocument } from 'src/modules/users/entities/user.entity';
 import { User } from 'src/modules/users/users.schema';
 import { RegisterInput } from './dtos/register-user.dto';
 import * as yup from 'yup';
-import { duplicate, emailNotLongEnough, invalidEmail } from './errorMessages';
+import { duplicate, emailNotLongEnough } from './errorMessages';
 import { formatYupError } from 'src/utils/formatYupError';
 import { IError } from 'src/types/IError';
 
 const schema = yup.object().shape({
-  email: yup.string().min(3, emailNotLongEnough).max(255).email(invalidEmail),
   username: yup.string().min(3, emailNotLongEnough).max(20),
   image: yup.string(),
   walletAddress: yup.string(),
@@ -38,20 +37,11 @@ export class RegisterService {
   }
 
   async createUser(data: RegisterInput): Promise<IError[] | null> {
-    const { email, image, username, walletAddress } = data;
+    const { image, username, walletAddress } = data;
     try {
       await schema.validate(data, { abortEarly: false });
     } catch (err: any) {
       return formatYupError(err);
-    }
-
-    if (await this.verifyEmailExists(email)) {
-      return [
-        {
-          path: 'email',
-          message: duplicate,
-        },
-      ];
     }
 
     if (await this.verifyUsernameExists(username)) {
@@ -73,7 +63,6 @@ export class RegisterService {
     }
 
     await this.userModel.create({
-      email,
       walletAddress,
       image,
       username,

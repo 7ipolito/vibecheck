@@ -83,36 +83,32 @@ export const Login = () => {
         });
 
         if (response.status === 200) {
-          try {
-            const createUserResponse = await createUser({
-              walletAddress: "u2ehehwihdisd",
-              email: "teste@gmail.com",
-              image: "kndknskndksnsnanknk",
-              username: "7282827272ajnadjbbjsj",
-            });
+          const createUserResponse = await createUser({
+            walletAddress: MiniKit.user?.walletAddress,
+            image: MiniKit.user?.profilePictureUrl || null,
+            username: MiniKit.user?.username,
+          });
 
-            console.log("Resposta da criação de usuário:", createUserResponse);
+          console.log(createUserResponse);
 
-            // Verifica se houve erro na resposta da mutation
-            if (createUserResponse?.data?.register?.error) {
-              console.error(
-                "Erro ao registrar usuário:",
-                createUserResponse.data.register.error
-              );
-              setLoading(false);
-
-              setError("Failed to create user.");
-              return;
-            }
-
-            // Redireciona somente se a criação do usuário foi bem-sucedida
-            router.push("/search");
-          } catch (error) {
-            setLoading(false);
-
-            console.error("Erro ao criar usuário:", error);
-            setError("Failed to log in.");
+          // Verifica se houve erro na resposta da mutation
+          if (createUserResponse?.data?.register?.error[0].path) {
+            // console.error(
+            //   "Erro ao registrar usuário:",
+            //   createUserResponse.data.register.error
+            // );
+            // handleLogout();
+            // setLoading(false);
+            // console.log(createUserResponse.data.register.error[0]);
+            // setError(
+            //   `path:${createUserResponse.data.register.error[0].path}:${createUserResponse.data.register.error[0].message}`
+            // );
+            // return;
           }
+
+          router.push("/search");
+
+          // Redireciona somente se a criação do usuário foi bem-sucedida
         } else {
           console.log("OI");
           setError("Failed to log in.");
@@ -144,21 +140,21 @@ export const Login = () => {
     <div className="flex flex-col items-center space-y-4">
       {!user && (
         <div className="flex flex-col space-y-4 ">
+          <div className="flex flex-col items-center space-y-4">
+            {error && (
+              <div className="text-red-500 text-sm p-2">
+                <strong>Error:</strong> {error}
+              </div>
+            )}
+          </div>
           <div className="w-full bg-black text-white p-4">
-            <div className="flex flex-col items-center space-y-4">
-              {error && (
-                <div className="text-red-500 text-sm p-2">
-                  <strong>Error:</strong> {error}
-                </div>
-              )}
-              <button
-                onClick={handleLogin}
-                disabled={loading}
-                className="flex-row"
-              >
-                {loading ? "Connecting..." : "Login with WorldID"}
-              </button>
-            </div>
+            <button
+              onClick={handleLogin}
+              disabled={loading}
+              className="flex-row"
+            >
+              {loading ? "Connecting..." : "Login with WorldID"}
+            </button>
           </div>
         </div>
       )}

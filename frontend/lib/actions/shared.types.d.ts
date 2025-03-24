@@ -1,6 +1,5 @@
 export interface CreateUserParams {
   walletAddress?: string;
-  email?: string;
   username?: string | null;
   image?: string | null;
 }

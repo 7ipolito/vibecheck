@@ -1,30 +1,13 @@
-import {
-  ApolloClient,
-  InMemoryCache,
-  HttpLink,
-  split,
-  ApolloLink,
-  fromPromise,
-} from "@apollo/client";
-import { WebSocketLink } from "@apollo/client/link/ws";
-import { getMainDefinition } from "@apollo/client/utilities";
+import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 
 const httpLink = new HttpLink({
   uri: process.env.NEXT_PUBLIC_API_URL,
   credentials: "include",
 });
 
-const link = split(({ query }) => {
-  const definition = getMainDefinition(query);
-  return (
-    definition.kind === "OperationDefinition" &&
-    definition.operation === "subscription"
-  );
-}, httpLink);
-
 const client = new ApolloClient({
   ssrMode: true,
-  link,
+  link: httpLink,
   cache: new InMemoryCache(),
 });
 
