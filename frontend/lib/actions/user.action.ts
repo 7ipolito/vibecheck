@@ -10,25 +10,23 @@ import {
 } from "./shared.types";
 
 export async function createUser(userData: CreateUserParams) {
-  const { walletAddress, email, image, username } = userData;
+  const { walletAddress, image, username } = userData;
   console.log(userData);
 
   try {
     const response = await client.mutate({
       mutation: CREATE_USER,
       variables: {
-        email,
         walletAddress,
         image,
         username,
       },
     });
 
-    console.log("Resposta da mutation:", response);
-    return response; // Retorna a resposta da mutation
+    return response;
   } catch (error) {
     console.error("Erro ao criar usuário:", error);
-    throw error; // Propaga o erro para o chamador
+    throw error;
   }
 }
 
