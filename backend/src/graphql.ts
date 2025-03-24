@@ -35,7 +35,6 @@ export interface User {
     username: string;
     walletAddress: string;
     image: string;
-    email: string;
     createdAt: DateTime;
 }
 

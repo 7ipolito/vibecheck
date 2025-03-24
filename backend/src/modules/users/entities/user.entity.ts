@@ -10,12 +10,8 @@ export class User {
   _id: MongooSchema.Types.ObjectId;
 
   // @Field(() => String)
-  // @Prop({ required: true, unique: true })
-  // clerkUserId: string;
-
-  @Field(() => String)
-  @Prop({ required: true })
-  email: string;
+  // @Prop()
+  // email: string;
 
   @Field(() => String)
   @Prop()
