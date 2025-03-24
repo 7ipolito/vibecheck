@@ -10,13 +10,13 @@ export class UserResolver {
 
   @Query(() => User)
   async whoami(@Args('whoamiInput') whoamiInput: WhoamiInput): Promise<User> {
-    const userId = whoamiInput.userId;
+    const walletAdddress = whoamiInput.walletAdddress;
 
-    if (!userId) {
+    if (!walletAdddress) {
       throw new Error('User ID not found in context');
     }
 
-    const user = await this.usersService.getUser(userId);
+    const user = await this.usersService.getUser(walletAdddress);
 
     if (!user) {
       throw new Error('User not found');

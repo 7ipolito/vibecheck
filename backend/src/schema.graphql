@@ -55,7 +55,7 @@ type Query {
 }
 
 input WhoamiInput {
-  userId: String!
+  walletAdddress: String!
 }
 
 type Mutation {

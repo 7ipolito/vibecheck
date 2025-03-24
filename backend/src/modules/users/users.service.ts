@@ -13,7 +13,7 @@ export class UserService {
   ) {}
 
   async getUser(walletAddress: string): Promise<User> {
-    return await this.userModel.findOne({ walletAddress });
+    return await this.userModel.findOne({ walletAddress: walletAddress });
   }
 
   async deleteUser(data: DeleteInput): Promise<IError[] | null> {
