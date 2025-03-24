@@ -18,6 +18,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const ErudaProvider = dynamic(
+    () => import("../components/Eruda").then((c) => c.ErudaProvider),
+    {
+      ssr: false,
+    }
+  );
   const session = await getServerSession();
 
   return (
@@ -36,7 +42,9 @@ export default async function RootLayout({
       </head>
       <body className={sora.className}>
         <MiniKitProvider>
-          <SessionProvider session={session}>{children}</SessionProvider>
+          <ErudaProvider>
+            <SessionProvider session={session}>{children}</SessionProvider>
+          </ErudaProvider>
         </MiniKitProvider>
       </body>
     </html>

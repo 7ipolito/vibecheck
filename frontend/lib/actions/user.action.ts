@@ -11,20 +11,24 @@ import {
 
 export async function createUser(userData: CreateUserParams) {
   const { walletAddress, email, image, username } = userData;
+  console.log(userData);
 
   try {
-    await client.mutate({
+    const response = await client.mutate({
       mutation: CREATE_USER,
       variables: {
-        email: ".",
-        walletAddress: walletAddress,
-        image: image,
-        username: ".",
+        email,
+        walletAddress,
+        image,
+        username,
       },
     });
+
+    console.log("Resposta da mutation:", response);
+    return response; // Retorna a resposta da mutation
   } catch (error) {
     console.error("Erro ao criar usuário:", error);
-    throw error;
+    throw error; // Propaga o erro para o chamador
   }
 }
 
@@ -32,12 +36,16 @@ export async function getUserData(userData: GetUserParams) {
   const { walletAddress } = userData;
 
   try {
-    return await client.query({
+    const response = await client.query({
       query: GET_WHOAMI,
       variables: { walletAddress: walletAddress },
     });
+
+    console.log(response);
+
+    return response;
   } catch (error) {
-    console.log(walletAddress);
+    console.log(error);
 
     console.error("Erro ao buscar dados do usuário:", error);
     throw new Error("Não foi possível buscar os dados do usuário.");

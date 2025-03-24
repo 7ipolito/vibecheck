@@ -5,6 +5,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Globe } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createUser, getUserData } from "@/lib/actions/user.action";
+import { error } from "console";
+
 const walletAuthInput = (nonce: string): WalletAuthInput => {
   return {
     nonce,
@@ -25,6 +27,7 @@ type User = {
 export const Login = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null); // Estado para erros
   const router = useRouter();
 
   const refreshUserData = useCallback(async () => {
@@ -38,6 +41,7 @@ export const Login = () => {
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
+      setError("Error fetching user data.");
     }
   }, []);
 
@@ -47,7 +51,7 @@ export const Login = () => {
 
   useEffect(() => {
     // Ensure the code only runs on the client side
-    if (typeof window !== "undefined" && user) {
+    if (user) {
       router.push("/search");
     }
   }, [user, router]);
@@ -64,6 +68,7 @@ export const Login = () => {
 
       if (finalPayload.status === "error") {
         setLoading(false);
+        setError("Error during WorldID authentication.");
         return;
       } else {
         const response = await fetch("/api/auth/login", {
@@ -78,23 +83,46 @@ export const Login = () => {
         });
 
         if (response.status === 200) {
-          const response = await getUserData({
-            walletAddress: MiniKit.user?.walletAddress,
-          });
-
-          if (!response) {
-            await createUser({
-              walletAddress: MiniKit.user?.walletAddress,
-              email: ".",
-              image: MiniKit.user?.profilePictureUrl,
-              username: ".",
+          try {
+            const createUserResponse = await createUser({
+              walletAddress: "u2ehehwihdisd",
+              email: "teste@gmail.com",
+              image: "kndknskndksnsnanknk",
+              username: "7282827272ajnadjbbjsj",
             });
+
+            console.log("Resposta da criação de usuário:", createUserResponse);
+
+            // Verifica se houve erro na resposta da mutation
+            if (createUserResponse?.data?.register?.error) {
+              console.error(
+                "Erro ao registrar usuário:",
+                createUserResponse.data.register.error
+              );
+              setLoading(false);
+
+              setError("Failed to create user.");
+              return;
+            }
+
+            // Redireciona somente se a criação do usuário foi bem-sucedida
+            router.push("/search");
+          } catch (error) {
+            setLoading(false);
+
+            console.error("Erro ao criar usuário:", error);
+            setError("Failed to log in.");
           }
+        } else {
+          console.log("OI");
+          setError("Failed to log in.");
         }
+
         setLoading(false);
       }
     } catch (error) {
       console.error("Login error:", error);
+      setError("Error during login.");
       setLoading(false);
     }
   };
@@ -108,6 +136,7 @@ export const Login = () => {
       setUser(null);
     } catch (error) {
       console.error("Logout error:", error);
+      setError("Error during logout.");
     }
   };
 
@@ -117,6 +146,11 @@ export const Login = () => {
         <div className="flex flex-col space-y-4 ">
           <div className="w-full bg-black text-white p-4">
             <div className="flex flex-col items-center space-y-4">
+              {error && (
+                <div className="text-red-500 text-sm p-2">
+                  <strong>Error:</strong> {error}
+                </div>
+              )}
               <button
                 onClick={handleLogin}
                 disabled={loading}

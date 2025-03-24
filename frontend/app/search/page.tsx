@@ -15,12 +15,25 @@ import {
 import { CalendarIcon, Search } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 export default function SearchPage() {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [location, setLocation] = useState("São Paulo");
   const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
 
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
   return (
     <main className="flex min-h-screen flex-col p-4">
       <div className="w-full max-w-md mx-auto space-y-6">
@@ -87,6 +100,9 @@ export default function SearchPage() {
             </Link>
           </div>
         </div>
+        <Button onClick={handleLogout} variant="secondary">
+          SignOut
+        </Button>
       </div>
     </main>
   );
