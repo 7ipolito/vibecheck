@@ -11,19 +11,9 @@ export const GET_WHOAMI = gql`
 export const GET_POSTS = gql`
   query {
     posts {
-      id
-      body
-      likes {
-        email
-      }
-      user {
-        clerkUserId
-        username
-        image
-        email
-      }
-      countLikes
-      countComments
+      name
+      image
+      description
     }
   }
 `;

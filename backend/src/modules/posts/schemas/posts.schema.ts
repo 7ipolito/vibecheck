@@ -13,6 +13,9 @@ export class Post {
   description?: string;
 
   @Field()
+  image?: string;
+
+  @Field()
   additionalImages?: string;
 
   @Field()

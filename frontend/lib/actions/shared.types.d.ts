@@ -25,16 +25,15 @@ interface User {
   _id: string;
   email: string;
   image: string;
-  clerkUserId: string;
+  walletAddress: string;
   username: string;
 }
 
 export interface GetPostParams {
   id: string;
-  countLikes: number;
-  countComments: number;
-  likes: User[];
-  user: User;
-  body: string;
+  name: string;
+  image: string;
+  description: string;
+
   createdAt: Date;
 }

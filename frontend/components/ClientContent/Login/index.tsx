@@ -83,8 +83,14 @@ export const Login = () => {
         });
 
         if (response.status === 200) {
+          if (!MiniKit.user?.walletAddress) {
+            setError("Wallet address is missing.");
+            setLoading(false);
+            return;
+          }
+
           const createUserResponse = await createUser({
-            walletAddress: MiniKit.user?.walletAddress,
+            walletAddress: MiniKit.user.walletAddress,
             image:
               MiniKit.user?.profilePictureUrl ||
               "https://avatars.githubusercontent.com/u/45522944?v=4",
@@ -93,8 +99,10 @@ export const Login = () => {
 
           console.log(createUserResponse);
 
+          console.log(createUserResponse);
+
           // Redireciona somente se a criação do usuário foi bem-sucedida
-          router.push("/search");
+          router.push("/dashboard");
         } else {
           setError("Failed to log in.");
         }

@@ -61,6 +61,7 @@ export interface Post {
     id: string;
     name: string;
     description: string;
+    image: string;
     additionalImages: string;
     instagram: string;
     createdAt: string;
