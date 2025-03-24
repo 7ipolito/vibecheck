@@ -19,6 +19,10 @@ export class User {
 
   @Field(() => String)
   @Prop()
+  walletAddress: string;
+
+  @Field(() => String)
+  @Prop()
   image: string;
 
   @Field(() => String)

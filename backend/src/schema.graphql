@@ -5,6 +5,7 @@
 type User {
   _id: ID!
   username: String!
+  walletAddress: String!
   image: String!
   email: String!
   createdAt: DateTime!
@@ -78,5 +79,6 @@ input CreateFullyPostDto {
 input RegisterInput {
   username: String!
   image: String
+  walletAddress: String
   email: String!
 }

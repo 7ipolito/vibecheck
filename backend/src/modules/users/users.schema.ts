@@ -10,6 +10,9 @@ export class User {
   username: string;
 
   @Field()
+  walletAddress: string;
+
+  @Field()
   image: string;
 
   @Field()

@@ -3,7 +3,8 @@ import { MiniKit, WalletAuthInput } from "@worldcoin/minikit-js";
 import { Button } from "@worldcoin/mini-apps-ui-kit-react";
 import { useCallback, useEffect, useState } from "react";
 import { Globe } from "lucide-react";
-
+import { useRouter } from "next/navigation";
+import { createUser, getUserData } from "@/lib/actions/user.action";
 const walletAuthInput = (nonce: string): WalletAuthInput => {
   return {
     nonce,
@@ -24,6 +25,7 @@ type User = {
 export const Login = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const refreshUserData = useCallback(async () => {
     try {
@@ -42,6 +44,13 @@ export const Login = () => {
   useEffect(() => {
     refreshUserData();
   }, [refreshUserData]);
+
+  useEffect(() => {
+    // Ensure the code only runs on the client side
+    if (typeof window !== "undefined" && user) {
+      router.push("/search");
+    }
+  }, [user, router]);
 
   const handleLogin = async () => {
     try {
@@ -69,7 +78,18 @@ export const Login = () => {
         });
 
         if (response.status === 200) {
-          setUser(MiniKit.user);
+          const response = await getUserData({
+            walletAddress: MiniKit.user?.walletAddress,
+          });
+
+          if (!response) {
+            await createUser({
+              walletAddress: MiniKit.user?.walletAddress,
+              email: ".",
+              image: MiniKit.user?.profilePictureUrl,
+              username: ".",
+            });
+          }
         }
         setLoading(false);
       }

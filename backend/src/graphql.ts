@@ -27,12 +27,14 @@ export interface CreateFullyPostDto {
 export interface RegisterInput {
     username: string;
     image?: Nullable<string>;
+    walletAddress?: Nullable<string>;
     email: string;
 }
 
 export interface User {
     _id: string;
     username: string;
+    walletAddress: string;
     image: string;
     email: string;
     createdAt: DateTime;

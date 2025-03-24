@@ -9,6 +9,9 @@ export class RegisterInput {
   @Field({ nullable: true })
   image: string;
 
+  @Field({ nullable: true })
+  walletAddress: string;
+
   @Field()
   email: string;
 }

@@ -12,8 +12,8 @@ export class UserService {
     private userModel: Model<UserDocument>,
   ) {}
 
-  async getUser(userId: string): Promise<User> {
-    return await this.userModel.findOne({ id: userId });
+  async getUser(walletAddress: string): Promise<User> {
+    return await this.userModel.findOne({ walletAddress });
   }
 
   async deleteUser(data: DeleteInput): Promise<IError[] | null> {
