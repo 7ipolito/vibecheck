@@ -7,9 +7,6 @@ export class User {
   _id: ObjectId;
 
   @Field()
-  clerkUserId: string;
-
-  @Field()
   username: string;
 
   @Field()

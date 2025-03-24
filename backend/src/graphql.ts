@@ -20,10 +20,11 @@ export interface CreateFullyPostDto {
     name: string;
     description: string;
     image: string;
+    instagram: string;
+    userId: string;
 }
 
 export interface RegisterInput {
-    clerkUserId: string;
     username: string;
     image?: Nullable<string>;
     email: string;
@@ -31,7 +32,6 @@ export interface RegisterInput {
 
 export interface User {
     _id: string;
-    clerkUserId: string;
     username: string;
     image: string;
     email: string;
@@ -61,7 +61,7 @@ export interface Post {
     name: string;
     description: string;
     additionalImages: string;
-    text: string;
+    instagram: string;
     createdAt: string;
     user: User;
 }

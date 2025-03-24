@@ -6,7 +6,7 @@ import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { RegisterModule } from './modules/register/register.module';
-import { PostsModule } from './modules/events/posts.module';
+import { PostsModule } from './modules/posts/posts.module';
 
 @Module({
   imports: [

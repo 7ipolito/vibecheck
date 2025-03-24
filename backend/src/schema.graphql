@@ -4,7 +4,6 @@
 
 type User {
   _id: ID!
-  clerkUserId: String!
   username: String!
   image: String!
   email: String!
@@ -39,7 +38,7 @@ type Post {
   name: String!
   description: String!
   additionalImages: String!
-  text: String!
+  instagram: String!
   createdAt: String!
   user: User!
 }
@@ -72,10 +71,11 @@ input CreateFullyPostDto {
   name: String!
   description: String!
   image: String!
+  instagram: String!
+  userId: String!
 }
 
 input RegisterInput {
-  clerkUserId: String!
   username: String!
   image: String
   email: String!

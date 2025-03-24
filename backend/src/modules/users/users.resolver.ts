@@ -1,8 +1,6 @@
-import { Resolver, Query, Context, Mutation, Args } from '@nestjs/graphql';
-import { ClerkGuard } from './guards/clerk.guard';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { User } from './users.schema';
 import { UserService } from './users.service';
-import { UseGuards } from '@nestjs/common';
 import { DeleteInput, DeleteResponse } from './dtos/delete-user.dto';
 import { WhoamiInput } from './dtos/whoami.dto';
 

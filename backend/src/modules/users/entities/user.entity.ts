@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { ObjectType, Field } from '@nestjs/graphql';
 import mongoose, { Document, Schema as MongooSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Post } from 'src/modules/posts/entities/post.entity';
@@ -9,9 +9,9 @@ export class User {
   @Field(() => String)
   _id: MongooSchema.Types.ObjectId;
 
-  @Field(() => String)
-  @Prop({ required: true, unique: true })
-  clerkUserId: string;
+  // @Field(() => String)
+  // @Prop({ required: true, unique: true })
+  // clerkUserId: string;
 
   @Field(() => String)
   @Prop({ required: true })

@@ -13,7 +13,7 @@ export class UserService {
   ) {}
 
   async getUser(userId: string): Promise<User> {
-    return await this.userModel.findOne({ clerkUserId: userId });
+    return await this.userModel.findOne({ id: userId });
   }
 
   async deleteUser(data: DeleteInput): Promise<IError[] | null> {

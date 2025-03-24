@@ -4,9 +4,6 @@ import { IError } from 'src/types/IError';
 @InputType()
 export class RegisterInput {
   @Field()
-  clerkUserId: string;
-
-  @Field()
   username: string;
 
   @Field({ nullable: true })
