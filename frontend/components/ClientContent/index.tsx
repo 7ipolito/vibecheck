@@ -11,7 +11,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { WalletAuth } from "./WalletAuth";
 import { Login } from "./Login";
-import LoginPage from "@/app/screens/Login/page";
+import LoginPage from "@/app/login/page";
 
 const VersionsNoSSR = dynamic(
   () => import("./Versions").then((comp) => comp.Versions),

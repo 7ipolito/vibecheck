@@ -1,14 +1,9 @@
 import { gql } from "@apollo/client";
 
 export const GET_WHOAMI = gql`
-  query ($walletAddress: String!) {
-    whoami(whoamiInput: { walletAddress: $walletAddress }) {
+  query ($userId: String!) {
+    whoami(whoamiInput: { userId: $userId }) {
       _id
-      email
-      walletAddress
-      image
-      username
-      createdAt
     }
   }
 `;

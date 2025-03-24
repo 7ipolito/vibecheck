@@ -14,24 +14,13 @@ const httpLink = new HttpLink({
   credentials: "include",
 });
 
-const wsLink = new WebSocketLink({
-  uri: process.env.NEXT_PUBLIC_API_WS_URL!,
-  options: {
-    reconnect: true,
-  },
-});
-
-const link = split(
-  ({ query }) => {
-    const definition = getMainDefinition(query);
-    return (
-      definition.kind === "OperationDefinition" &&
-      definition.operation === "subscription"
-    );
-  },
-  wsLink,
-  httpLink
-);
+const link = split(({ query }) => {
+  const definition = getMainDefinition(query);
+  return (
+    definition.kind === "OperationDefinition" &&
+    definition.operation === "subscription"
+  );
+}, httpLink);
 
 const client = new ApolloClient({
   ssrMode: true,

@@ -23,8 +23,12 @@ export class ErrorType implements IError {
   @Field()
   message: string;
 }
+
 @ObjectType()
 export class RegisterResponse {
   @Field(() => [ErrorType], { nullable: true })
   error?: ErrorType[];
+
+  @Field(() => Boolean, { nullable: true })
+  success?: boolean;
 }
