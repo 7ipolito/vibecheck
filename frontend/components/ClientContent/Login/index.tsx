@@ -85,35 +85,19 @@ export const Login = () => {
         if (response.status === 200) {
           const createUserResponse = await createUser({
             walletAddress: MiniKit.user?.walletAddress,
-            image: MiniKit.user?.profilePictureUrl || null,
+            image:
+              MiniKit.user?.profilePictureUrl ||
+              "https://avatars.githubusercontent.com/u/45522944?v=4",
             username: MiniKit.user?.username,
           });
 
           console.log(createUserResponse);
 
-          // Verifica se houve erro na resposta da mutation
-          if (createUserResponse?.data?.register?.error[0].path) {
-            // console.error(
-            //   "Erro ao registrar usuário:",
-            //   createUserResponse.data.register.error
-            // );
-            // handleLogout();
-            // setLoading(false);
-            // console.log(createUserResponse.data.register.error[0]);
-            // setError(
-            //   `path:${createUserResponse.data.register.error[0].path}:${createUserResponse.data.register.error[0].message}`
-            // );
-            // return;
-          }
-
-          router.push("/search");
-
           // Redireciona somente se a criação do usuário foi bem-sucedida
+          router.push("/search");
         } else {
-          console.log("OI");
           setError("Failed to log in.");
         }
-
         setLoading(false);
       }
     } catch (error) {

@@ -13,14 +13,12 @@ export const LOGIN = gql`
 
 export const CREATE_USER = gql`
   mutation CreateAccount(
-    $email: String!
     $walletAddress: String!
     $image: String!
     $username: String!
   ) {
     register(
       registerInput: {
-        email: $email
         walletAddress: $walletAddress
         image: $image
         username: $username

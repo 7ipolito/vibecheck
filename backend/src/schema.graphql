@@ -32,6 +32,7 @@ type ErrorType {
 
 type RegisterResponse {
   error: [ErrorType!]
+  success: Boolean
 }
 
 type Post {
@@ -79,6 +80,5 @@ input CreateFullyPostDto {
 input RegisterInput {
   username: String!
   image: String
-  walletAddress: String
-  email: String!
+  walletAddress: String!
 }
