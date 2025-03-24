@@ -6,6 +6,7 @@ import "./globals.css";
 import SessionProvider from "@/components/session-provider";
 import { MiniKitProvider } from "@/components/MiniKitProvider";
 import { Sora } from "next/font/google";
+import NextAuthProvider from "@/components/next-auth-provider";
 const sora = Sora({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -41,11 +42,11 @@ export default async function RootLayout({
         />
       </head>
       <body className={sora.className}>
-        <MiniKitProvider>
+        <NextAuthProvider>
           <ErudaProvider>
-            <SessionProvider session={session}>{children}</SessionProvider>
+            <MiniKitProvider>{children}</MiniKitProvider>
           </ErudaProvider>
-        </MiniKitProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );

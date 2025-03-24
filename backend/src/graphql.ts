@@ -27,8 +27,7 @@ export interface CreateFullyPostDto {
 export interface RegisterInput {
     username: string;
     image?: Nullable<string>;
-    walletAddress?: Nullable<string>;
-    email: string;
+    walletAddress: string;
 }
 
 export interface User {
@@ -56,6 +55,7 @@ export interface ErrorType {
 
 export interface RegisterResponse {
     error?: Nullable<ErrorType[]>;
+    success?: Nullable<boolean>;
 }
 
 export interface Post {
