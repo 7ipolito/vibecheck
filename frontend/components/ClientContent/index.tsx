@@ -1,5 +1,4 @@
 "use client";
-
 import { MiniKit } from "@worldcoin/minikit-js";
 // import {
 //   GetSearchedUsernameResult,
@@ -12,6 +11,8 @@ import { useEffect, useState } from "react";
 import { WalletAuth } from "./WalletAuth";
 import { Login } from "./Login";
 import LoginPage from "@/app/login/page";
+import client from "@/lib/client";
+import { ApolloProvider } from "@apollo/client";
 
 const VersionsNoSSR = dynamic(
   () => import("./Versions").then((comp) => comp.Versions),
@@ -24,8 +25,8 @@ export const ClientContent = () => {
     setIsI(MiniKit.isInstalled());
   }, []);
   return (
-    <div>
+    <ApolloProvider client={client}>
       <LoginPage />
-    </div>
+    </ApolloProvider>
   );
 };

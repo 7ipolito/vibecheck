@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react";
 import { MiniKit } from "@worldcoin/minikit-js";
 import { Login } from "@/components/ClientContent/Login";

@@ -3,7 +3,6 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { Label } from "recharts";
 import {
   Popover,
   PopoverTrigger,
@@ -18,7 +17,7 @@ interface DatePickerProps {
 export default function DatePicker({ date, setDate }: DatePickerProps) {
   return (
     <div className="space-y-2">
-      <Label>When do you want to go?</Label>
+      <p>When do you want to go?</p>
       <div className="grid grid-cols-2 gap-4">
         <Popover>
           <PopoverTrigger asChild>
@@ -34,14 +33,6 @@ export default function DatePicker({ date, setDate }: DatePickerProps) {
               {date ? format(date, "PPP") : "Pick a date"}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              initialFocus
-            />
-          </PopoverContent>
         </Popover>
         <Button variant="outline">Any time</Button>
       </div>

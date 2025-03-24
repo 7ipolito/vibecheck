@@ -30,10 +30,7 @@ interface User {
 }
 
 export interface GetPostParams {
-  id: string;
   name: string;
   image: string;
   description: string;
-
-  createdAt: Date;
 }

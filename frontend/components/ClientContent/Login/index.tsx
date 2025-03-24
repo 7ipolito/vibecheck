@@ -52,7 +52,7 @@ export const Login = () => {
   useEffect(() => {
     // Ensure the code only runs on the client side
     if (user) {
-      router.push("/search");
+      router.push("/rating");
     }
   }, [user, router]);
 
@@ -99,10 +99,8 @@ export const Login = () => {
 
           console.log(createUserResponse);
 
-          console.log(createUserResponse);
-
           // Redireciona somente se a criação do usuário foi bem-sucedida
-          router.push("/dashboard");
+          router.push("/rating");
         } else {
           setError("Failed to log in.");
         }

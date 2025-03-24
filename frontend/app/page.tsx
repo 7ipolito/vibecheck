@@ -1,4 +1,7 @@
 import { ClientContent } from "@/components/ClientContent";
+import client from "@/lib/client";
+import { ApolloProvider } from "@apollo/client";
+import { Rating } from "@smastrom/react-rating";
 
 const Home = async () => {
   console.log("Server Rendering Works!");
