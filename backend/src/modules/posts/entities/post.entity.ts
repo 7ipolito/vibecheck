@@ -2,7 +2,6 @@ import { Field } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooSchema } from 'mongoose';
 import { User } from 'src/modules/users/users.schema';
-import { Comment } from '../schemas/comments.schema';
 
 @Schema({ timestamps: true })
 export class Post extends Document {
@@ -11,47 +10,31 @@ export class Post extends Document {
 
   @Field()
   @Prop({ required: true })
-  body: string;
+  name: string; // Nome do Posto
 
-  @Field()
-  @Prop({ default: 0 })
-  countLikes: number;
-
-  @Field()
-  @Prop({ default: 0 })
-  countComments: number;
-
-  @Field()
+  @Field({ nullable: true })
   @Prop()
+  description?: string; // Descrição do evento
+
+  @Field({ nullable: true })
+  @Prop()
+  image?: string; // Imagem principal do evento
+
+  @Field(() => [String], { nullable: true })
+  @Prop({ type: [String], default: [] })
+  additionalImages?: string[];
+
+  @Field({ nullable: true })
+  @Prop()
+  instagram?: string;
+
+  @Field()
+  @Prop({ default: Date.now })
   createdAt: Date;
 
   @Field(() => User)
   @Prop({ type: MongooSchema.Types.ObjectId, ref: 'User', required: true })
-  user: MongooSchema.Types.ObjectId[];
-
-  @Field(() => [User])
-  @Prop({
-    type: [{ type: MongooSchema.Types.ObjectId, ref: 'User' }],
-    default: [],
-  })
-  likes: MongooSchema.Types.ObjectId[];
-
-  @Field(() => [Comment], { nullable: true })
-  @Prop({
-    type: [
-      {
-        user: { type: MongooSchema.Types.ObjectId, ref: 'User' },
-        text: { type: String, required: true },
-        createdAt: { type: Date, default: Date.now },
-      },
-    ],
-    default: [],
-  })
-  comments: {
-    user: MongooSchema.Types.ObjectId;
-    text: string;
-    createdAt: Date;
-  }[];
+  user: MongooSchema.Types.ObjectId;
 }
 
 export type PostDocument = Post & Document;

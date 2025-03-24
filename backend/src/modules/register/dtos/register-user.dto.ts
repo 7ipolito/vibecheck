@@ -4,13 +4,13 @@ import { IError } from 'src/types/IError';
 @InputType()
 export class RegisterInput {
   @Field()
-  clerkUserId: string;
-
-  @Field()
   username: string;
 
   @Field({ nullable: true })
   image: string;
+
+  @Field({ nullable: true })
+  walletAddress: string;
 
   @Field()
   email: string;

@@ -7,10 +7,10 @@ export class User {
   _id: ObjectId;
 
   @Field()
-  clerkUserId: string;
+  username: string;
 
   @Field()
-  username: string;
+  walletAddress: string;
 
   @Field()
   image: string;

@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { User } from '../../users/users.schema';
-import { Comment } from './comments.schema';
 
 @ObjectType()
 export class Post {
@@ -8,13 +7,22 @@ export class Post {
   id: string;
 
   @Field()
-  body: string;
+  name: string;
 
-  @Field({ defaultValue: 0 })
-  countLikes: number;
+  @Field()
+  description?: string;
 
-  @Field({ defaultValue: 0 })
-  countComments: number;
+  @Field()
+  additionalImages?: string;
+
+  @Field()
+  instagram?: string;
+
+  // @Field({ defaultValue: 0 })
+  // countLikes: number;
+
+  // @Field({ defaultValue: 0 })
+  // countComments: number;
 
   @Field()
   createdAt: string;
@@ -22,9 +30,9 @@ export class Post {
   @Field(() => User)
   user: User;
 
-  @Field(() => [User], { nullable: true })
-  likes: User[];
+  // @Field(() => [User], { nullable: true })
+  // likes: User[];
 
-  @Field(() => [Comment], { nullable: true })
-  comments: Comment[];
+  // @Field(() => [Comment], { nullable: true })
+  // comments: Comment[];
 }
