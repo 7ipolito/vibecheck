@@ -9,7 +9,7 @@
 /* eslint-disable */
 
 export interface WhoamiInput {
-    userId: string;
+    walletAdddress: string;
 }
 
 export interface DeleteInput {

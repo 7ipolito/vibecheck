@@ -13,6 +13,7 @@ const schema = yup.object().shape({
   email: yup.string().min(3, emailNotLongEnough).max(255).email(invalidEmail),
   username: yup.string().min(3, emailNotLongEnough).max(20),
   image: yup.string(),
+  walletAddress: yup.string(),
 });
 
 @Injectable()
@@ -26,12 +27,18 @@ export class RegisterService {
     return (await this.userModel.findOne({ email })) !== null ? true : false;
   }
 
+  async verifyWalletAddressExists(walletAddress: string): Promise<boolean> {
+    return (await this.userModel.findOne({ walletAddress })) !== null
+      ? true
+      : false;
+  }
+
   async verifyUsernameExists(username: string): Promise<boolean> {
     return (await this.userModel.findOne({ username })) !== null ? true : false;
   }
 
   async createUser(data: RegisterInput): Promise<IError[] | null> {
-    const { email, image, username } = data;
+    const { email, image, username, walletAddress } = data;
     try {
       await schema.validate(data, { abortEarly: false });
     } catch (err: any) {
@@ -56,17 +63,18 @@ export class RegisterService {
       ];
     }
 
-    console.log(
-      await this.userModel.create({
-        email,
-        image,
-        username,
-      }),
-    );
+    if (await this.verifyWalletAddressExists(username)) {
+      return [
+        {
+          path: 'walletAddress',
+          message: duplicate,
+        },
+      ];
+    }
 
     await this.userModel.create({
       email,
-
+      walletAddress,
       image,
       username,
     });
