@@ -7,7 +7,6 @@ type User {
   username: String!
   walletAddress: String!
   image: String!
-  email: String!
   createdAt: DateTime!
 }
 

@@ -16,8 +16,5 @@ export class User {
   image: string;
 
   @Field()
-  email: string;
-
-  @Field()
   createdAt: Date;
 }
