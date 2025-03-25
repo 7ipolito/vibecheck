@@ -1,13 +1,13 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Post } from 'src/modules/posts/entities/post.entity';
+import { Post } from '../../../modules/posts/entities/post.entity';
 
 @ObjectType()
 export class Ticket {
   @Field(() => ID)
   id: string; // ID do ticket no formato string
 
-  //   @Field(() => Post)
-  //   event: Post; // Relacionamento com o Post (evento), representado como um objeto
+  @Field(() => Post) // Referência direta ao tipo Post
+  event: Post; // Não usar ObjectId aqui, apenas o tipo Post
 
   @Field()
   type: string; // Tipo do ticket (ex: VIP, Pista)

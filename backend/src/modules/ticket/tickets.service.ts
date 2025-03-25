@@ -14,13 +14,17 @@ export class TicketsService {
   ) {}
 
   async findAll(): Promise<Ticket[]> {
-    return this.ticketModel.find();
+    return this.ticketModel.find().populate('event');
+  }
+
+  async findByPostId(id: string): Promise<Ticket[]> {
+    return this.ticketModel.find({ event: id }).populate('event');
   }
 
   async createTicket(createTicketDTO: CreateTicketDto): Promise<Ticket> {
     const { eventId, ...ticketData } = createTicketDTO;
 
-    const event = await this.postModel.find({ id: eventId });
+    const event = await this.postModel.findById(eventId);
     if (!event) {
       throw new Error('Event not found');
     }
@@ -29,6 +33,8 @@ export class TicketsService {
       ...ticketData,
       event: eventId,
     });
-    return ticket.save();
+
+    const savedTicket = await ticket.save();
+    return savedTicket.populate('event');
   }
 }

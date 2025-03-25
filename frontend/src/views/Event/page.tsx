@@ -1,16 +1,14 @@
-import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin } from "lucide-react";
-
+import { Calendar, Clock, MapPin, Link } from "lucide-react";
+import React from "react";
+import Image from "next/image";
 interface EventPageProps {
   params: {
     id: string;
   };
 }
 
-export default function EventPage({ params }: EventPageProps) {
-  // In a real app, you would fetch event data based on the ID
+const EventView = ({ params }: EventPageProps) => {
   const eventData = {
     id: params.id,
     title: params.id === "1" ? "Music Festival" : "Food & Wine Festival",
@@ -21,7 +19,6 @@ export default function EventPage({ params }: EventPageProps) {
       "Join us for an unforgettable experience with amazing performances, great food, and wonderful company.",
     price: "R$ 85,00",
   };
-
   return (
     <main className="flex min-h-screen flex-col p-4">
       <div className="w-full max-w-md mx-auto space-y-6">
@@ -74,4 +71,6 @@ export default function EventPage({ params }: EventPageProps) {
       </div>
     </main>
   );
-}
+};
+
+export default EventView;

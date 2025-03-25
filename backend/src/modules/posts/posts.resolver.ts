@@ -1,7 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { PostService } from './posts.service';
-import { Post } from './schemas/posts.schema';
-
+import { Post } from './entities/post.entity';
 import { CreateSimplePostDto } from './dtos/create-post-simple.dto';
 
 @Resolver(() => Post)
