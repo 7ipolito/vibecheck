@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Star } from "lucide-react";
-import EventRating from "@/views/EventRating/page";
+import EventRating from "@/app/backup/EventRating/page";
 
 export default function Rating() {
   return <EventRating />;

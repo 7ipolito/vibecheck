@@ -2,7 +2,6 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { PostService } from './posts.service';
 import { Post } from './schemas/posts.schema';
 
-import { CreateFullyPostDto } from './dtos/create-post-fully.dto';
 import { CreateSimplePostDto } from './dtos/create-post-simple.dto';
 
 @Resolver(() => Post)

@@ -1,7 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooSchema } from 'mongoose';
-import { User } from 'src/modules/users/users.schema';
 
 @Schema({ timestamps: true })
 export class Post extends Document {

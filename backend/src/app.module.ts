@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { RegisterModule } from './modules/register/register.module';
 import { PostsModule } from './modules/posts/posts.module';
+import { TicketsModule } from './modules/ticket/ticket.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { PostsModule } from './modules/posts/posts.module';
     UsersModule,
     PostsModule,
     RegisterModule,
+    TicketsModule,
   ],
 })
 export class AppModule {}

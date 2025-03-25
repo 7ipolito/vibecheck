@@ -27,6 +27,13 @@ export interface RegisterInput {
     walletAddress: string;
 }
 
+export interface CreateTicketDto {
+    eventId: string;
+    type: string;
+    price: number;
+    bucketUrl?: Nullable<string>;
+}
+
 export interface User {
     _id: string;
     username: string;
@@ -63,15 +70,27 @@ export interface Post {
     createdAt: string;
 }
 
+export interface Ticket {
+    id: string;
+    type: string;
+    price: number;
+    bucketUrl?: Nullable<string>;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export interface IQuery {
     whoami(whoamiInput: WhoamiInput): User | Promise<User>;
     posts(): Post[] | Promise<Post[]>;
+    tickets(): Ticket[] | Promise<Ticket[]>;
 }
 
 export interface IMutation {
     deleteUser(deleteInput: DeleteInput): DeleteResponse | Promise<DeleteResponse>;
     createPost(createPostInput: CreateSimplePostDto): Post | Promise<Post>;
     register(registerInput: RegisterInput): RegisterResponse | Promise<RegisterResponse>;
+    createTicket(createTicketInput: CreateTicketDto): Ticket | Promise<Ticket>;
 }
 
 export type DateTime = any;
