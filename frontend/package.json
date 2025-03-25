@@ -39,6 +39,7 @@
     "@radix-ui/react-toggle-group": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
     "@smastrom/react-rating": "^1.5.0",
+    "@uploadthing/react": "^7.3.0",
     "@worldcoin/mini-apps-ui-kit-react": "^0.0.8",
     "@worldcoin/minikit-js": "^1.8.0",
     "autoprefixer": "^10.4.20",
@@ -64,6 +65,7 @@
     "subscriptions-transport-ws": "^0.11.0",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
+    "uploadthing": "^7.6.0",
     "vaul": "^0.9.6",
     "zod": "^3.24.1"
   },

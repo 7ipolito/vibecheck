@@ -39,15 +39,8 @@ type Post {
   name: String!
   description: String!
   image: String!
-  additionalImages: String!
   instagram: String!
   createdAt: String!
-  user: User!
-}
-
-type ErrorTypeCreatePost {
-  path: String!
-  message: String!
 }
 
 type Query {
@@ -61,7 +54,7 @@ input WhoamiInput {
 
 type Mutation {
   deleteUser(deleteInput: DeleteInput!): DeleteResponse!
-  createPost(createPostInput: CreateFullyPostDto!): Post!
+  createPost(createPostInput: CreateSimplePostDto!): Post!
   register(registerInput: RegisterInput!): RegisterResponse!
 }
 
@@ -69,12 +62,9 @@ input DeleteInput {
   id: String!
 }
 
-input CreateFullyPostDto {
+input CreateSimplePostDto {
   name: String!
-  description: String!
   image: String!
-  instagram: String!
-  userId: String!
 }
 
 input RegisterInput {

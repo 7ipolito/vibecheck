@@ -3,6 +3,7 @@ import { PostService } from './posts.service';
 import { Post } from './schemas/posts.schema';
 
 import { CreateFullyPostDto } from './dtos/create-post-fully.dto';
+import { CreateSimplePostDto } from './dtos/create-post-simple.dto';
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -14,7 +15,9 @@ export class PostResolver {
   }
 
   @Mutation(() => Post)
-  async createPost(@Args('createPostInput') createPostDto: CreateFullyPostDto) {
-    return this.postService.createFullyPost(createPostDto);
+  async createPost(
+    @Args('createPostInput') createPostDto: CreateSimplePostDto,
+  ) {
+    return this.postService.createSimplePost(createPostDto);
   }
 }

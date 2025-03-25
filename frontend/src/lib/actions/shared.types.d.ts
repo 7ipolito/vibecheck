@@ -29,6 +29,10 @@ interface User {
   username: string;
 }
 
+export interface CreatePostParams {
+  name: string;
+}
+
 export interface GetPostParams {
   name: string;
   image: string;

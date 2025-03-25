@@ -16,26 +16,8 @@ export class Post {
   image?: string;
 
   @Field()
-  additionalImages?: string;
-
-  @Field()
   instagram?: string;
-
-  // @Field({ defaultValue: 0 })
-  // countLikes: number;
-
-  // @Field({ defaultValue: 0 })
-  // countComments: number;
 
   @Field()
   createdAt: string;
-
-  @Field(() => User)
-  user: User;
-
-  // @Field(() => [User], { nullable: true })
-  // likes: User[];
-
-  // @Field(() => [Comment], { nullable: true })
-  // comments: Comment[];
 }

@@ -51,7 +51,7 @@ export const Login = () => {
   useEffect(() => {
     // Ensure the code only runs on the client side
     if (user) {
-      router.push("/rating");
+      router.push("/dashboard");
     }
   }, [user, router]);
 
@@ -99,7 +99,7 @@ export const Login = () => {
           console.log(createUserResponse);
 
           // Redireciona somente se a criação do usuário foi bem-sucedida
-          router.push("/rating");
+          router.push("/dashboard");
         } else {
           setError("Failed to log in.");
         }
@@ -127,26 +127,23 @@ export const Login = () => {
 
   return (
     <div className="flex flex-col items-center space-y-4">
-      {!user && (
-        <div className="flex flex-col space-y-4 ">
-          <div className="flex flex-col items-center space-y-4">
-            {error && (
-              <div className="text-red-500 text-sm p-2">
-                <strong>Error:</strong> {error}
-              </div>
-            )}
-          </div>
-          <div className="w-full bg-black text-white p-4 ">
-            <button
-              onClick={handleLogin}
-              disabled={loading}
-              className="flex-row"
-            >
-              {loading ? "Connecting..." : "Login with WorldID"}
-            </button>
-          </div>
+      <div className="flex flex-col space-y-4 ">
+        <div className="flex flex-col items-center space-y-4">
+          {error && (
+            <div className="text-red-500 text-sm p-2">
+              <strong>Error:</strong> {error}
+            </div>
+          )}
         </div>
-      )}
+        <div
+          className="w-full  text-white p-4 "
+          style={{ backgroundColor: "black" }}
+        >
+          <button onClick={handleLogin} disabled={loading} className="flex-row">
+            {loading ? "Connecting..." : "Login with WorldID"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

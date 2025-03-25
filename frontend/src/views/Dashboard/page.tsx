@@ -27,18 +27,23 @@ function DashboardView() {
       <div className="w-full max-w-md mx-auto space-y-6">
         <Header location={"Rio de Janeiro📍"} />
 
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <p>Where are people going tonight?</p>
           <Stories />
-        </div>
+        </div> */}
 
         <DatePicker />
 
         <div className="space-y-4">
-          <h2 className="font-medium">What's good?</h2>
-          <div className="space-y-4">
-            <EventCarousel />
-          </div>
+          <h2 className="font-medium">Hot events today 🔥</h2>
+
+          <EventCarousel />
+        </div>
+
+        <div className="space-y-4">
+          <h2 className="font-medium">Tickets sale 🏷️ </h2>
+
+          <EventCarousel />
         </div>
 
         <Button onClick={handleLogout} variant="secondary" size="md">

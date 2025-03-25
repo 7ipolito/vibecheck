@@ -13,6 +13,7 @@ import { Login } from "@/features/Auth/Login";
 import LoginPage from "@/app/login/page";
 import client from "@/lib/client";
 import { ApolloProvider } from "@apollo/client";
+import Rating from "@/app/rating/page";
 
 const VersionsNoSSR = dynamic(
   () => import("./Versions").then((comp) => comp.Versions),
@@ -24,5 +25,5 @@ export const ClientContent = () => {
   useEffect(() => {
     setIsI(MiniKit.isInstalled());
   }, []);
-  return <LoginPage />;
+  return <Rating />;
 };

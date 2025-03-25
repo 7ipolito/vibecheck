@@ -12,20 +12,21 @@ import EventCard from "@/entities/Dashboard/components/EventCard";
 import { GET_POSTS } from "@/graphql/queries";
 import { GetPostParams } from "@/lib/actions/shared.types";
 import client from "@/lib/client"; // Certifique-se de ter configurado o client Apollo corretamente
+import { useRouter } from "next/navigation";
 
 export default function EventCarousel() {
   const [postsData, setPostsData] = useState<GetPostParams[]>([]);
   const [loading, setLoading] = useState(true);
   const [api, setApi] = useState<any>();
   const [current, setCurrent] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
-    // Função para buscar os posts
     const fetchPosts = async () => {
       try {
         const { data } = await client.query({ query: GET_POSTS });
         console.log(data);
-        setPostsData(data.posts || []); // Ajuste de acordo com a estrutura retornada
+        setPostsData(data.posts || []);
       } catch (error) {
         console.error("Error fetching posts:", error);
       } finally {
@@ -35,6 +36,10 @@ export default function EventCarousel() {
 
     fetchPosts();
   }, []);
+
+  const handleSelect = () => {
+    router.push("/future/event/1");
+  };
 
   useEffect(() => {
     if (!api) {
@@ -77,6 +82,7 @@ export default function EventCarousel() {
             {postsData.map((event, index) => (
               <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                 <EventCard
+                  onClick={handleSelect}
                   imageSrc={event.image}
                   altText={event.name}
                   title={event.name}

@@ -20,9 +20,9 @@ export class Post extends Document {
   @Prop()
   image?: string; // Imagem principal do evento
 
-  @Field(() => [String], { nullable: true })
-  @Prop({ type: [String], default: [] })
-  additionalImages?: string[];
+  @Field({ defaultValue: false })
+  @Prop()
+  active?: boolean;
 
   @Field({ nullable: true })
   @Prop()
@@ -31,10 +31,6 @@ export class Post extends Document {
   @Field()
   @Prop({ default: Date.now })
   createdAt: Date;
-
-  @Field(() => User)
-  @Prop({ type: MongooSchema.Types.ObjectId, ref: 'User', required: true })
-  user: MongooSchema.Types.ObjectId;
 }
 
 export type PostDocument = Post & Document;
