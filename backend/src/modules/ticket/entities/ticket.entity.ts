@@ -1,7 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooSchema } from 'mongoose';
-import { Post } from 'src/modules/posts/schemas/posts.schema';
+import { Post } from 'src/modules/posts/entities/post.entity';
 
 @Schema({ timestamps: true })
 export class Ticket extends Document {

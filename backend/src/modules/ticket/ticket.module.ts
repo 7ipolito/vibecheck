@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Ticket, TicketSchema } from './entities/ticket.entity';
 import { TicketsResolver } from './ticket.resolver';
@@ -8,9 +8,9 @@ import { PostsModule } from '../posts/posts.module';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Ticket.name, schema: TicketSchema }]),
-    PostsModule, // Importa o PostsModule para acessar o PostService ou PostResolver
+    forwardRef(() => PostsModule), // Usando forwardRef
   ],
-  exports: [MongooseModule],
   providers: [TicketsResolver, TicketsService],
+  exports: [TicketsService, MongooseModule], // Exportando o serviço
 })
 export class TicketsModule {}

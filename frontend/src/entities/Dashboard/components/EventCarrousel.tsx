@@ -38,7 +38,7 @@ export default function EventCarousel() {
   }, []);
 
   const handleSelect = () => {
-    router.push("/future/event/1");
+    router.push("/event/1 ");
   };
 
   useEffect(() => {
