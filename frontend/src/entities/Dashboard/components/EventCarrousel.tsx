@@ -1,0 +1,109 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import EventCard from "@/entities/Dashboard/components/EventCard";
+import { GET_POSTS } from "@/graphql/queries";
+import { GetPostParams } from "@/lib/actions/shared.types";
+import client from "@/lib/client"; // Certifique-se de ter configurado o client Apollo corretamente
+
+export default function EventCarousel() {
+  const [postsData, setPostsData] = useState<GetPostParams[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [api, setApi] = useState<any>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    // Função para buscar os posts
+    const fetchPosts = async () => {
+      try {
+        const { data } = await client.query({ query: GET_POSTS });
+        console.log(data);
+        setPostsData(data.posts || []); // Ajuste de acordo com a estrutura retornada
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    const handleSelect = () => {
+      setCurrent(api.selectedScrollSnap());
+    };
+
+    api.on("select", handleSelect);
+
+    // Auto-advance slides every 3 seconds
+    const autoplayInterval = setInterval(() => {
+      api.scrollNext();
+    }, 10000);
+
+    return () => {
+      api.off("select", handleSelect);
+      clearInterval(autoplayInterval);
+    };
+  }, [api]);
+
+  return (
+    <div className="space-y-4">
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <p className="text-lg text-muted">Loading events...</p>
+        </div>
+      ) : postsData.length > 0 ? (
+        <Carousel
+          setApi={setApi}
+          className="w-full"
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+        >
+          <CarouselContent>
+            {postsData.map((event, index) => (
+              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                <EventCard
+                  imageSrc={event.image}
+                  altText={event.name}
+                  title={event.name}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="flex justify-center gap-1 mt-2">
+            {postsData.map((_, index) => (
+              <button
+                key={index}
+                className={`h-2 w-2 rounded-full transition-colors ${
+                  current === index ? "bg-primary" : "bg-muted"
+                }`}
+                onClick={() => api?.scrollTo(index)}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+          <CarouselPrevious className="hidden sm:flex" />
+          <CarouselNext className="hidden sm:flex" />
+        </Carousel>
+      ) : (
+        <div className="flex justify-center items-center h-64">
+          <p className="text-lg text-muted">No events found.</p>
+        </div>
+      )}
+    </div>
+  );
+}
