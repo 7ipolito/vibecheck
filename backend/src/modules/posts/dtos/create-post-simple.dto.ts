@@ -4,4 +4,7 @@ import { InputType, Field } from '@nestjs/graphql';
 export class CreateSimplePostDto {
   @Field()
   name: string;
+
+  @Field()
+  image: string;
 }

@@ -1,53 +1,110 @@
-// src/pages/event-rating.tsx
+"use client";
+
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import EventImage from "@/entities/Rating/components/EventImage";
-import EventNameInput from "@/entities/Rating/components/EventNameInput";
-import EventObservation from "@/entities/Rating/components/EventObservation";
-import EventRating from "@/entities/Rating/components/EventRating";
-import SubmitButton from "@/entities/Rating/components/SubmitButton";
-import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { UploadButton } from "@/utils/uploadthing";
+import { ArrowLeft, Trash } from "lucide-react";
 
-const EventRatingPage: React.FC = () => {
-  const [rating, setRating] = useState<number>(1.5);
-  const [eventName, setEventName] = useState("");
-  const [observation, setObservation] = useState("");
+const CadastrarEvento: React.FC = () => {
+  const [titulo, setTitulo] = useState("");
+  const [imagemUrl, setImagemUrl] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState(false);
 
   const router = useRouter();
 
+  const handleImageUploadComplete = (res: any) => {
+    setUploadError(false);
+    setImagemUrl(res[0].fileUrl); // Supondo que `fileUrl` é a chave correta
+    console.log("Imagem carregada:", res);
+  };
+
+  const handleImageUploadError = (error: Error) => {
+    console.error("Erro no upload:", error);
+    setUploadError(true);
+    alert(`Erro ao carregar a imagem: ${error.message}`);
+  };
+
+  const handleSubmit = async () => {
+    if (!imagemUrl) {
+      alert("Por favor, envie uma imagem para o evento.");
+      return;
+    }
+
+    try {
+      const userData = { name: titulo, image: imagemUrl };
+      console.log("Dados do evento:", userData);
+      // Chame sua função de API para salvar os dados, como createSimplePost(userData)
+      alert("Evento cadastrado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao cadastrar o evento:", error);
+      alert("Erro ao cadastrar o evento. Tente novamente.");
+    }
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-screen relative">
-      <div className="w-full max-w-md bg-white rounded-3xl p-6 relative">
+    <div className="flex items-center justify-center p-4 relative">
+      <div className="w-full max-w-lg bg-white rounded-3xl p-6">
         {/* Botão de voltar */}
         <button
-          className="top-4 left-4 flex items-center text-gray-600 hover:text-gray-800 transition-colors pb-4"
+          className="flex items-center text-gray-600 hover:text-gray-800 transition-colors pb-4"
           onClick={() => router.push("/dashboard")}
         >
           <ArrowLeft className="w-5 h-5 mr-2" />
-          Back
+          Voltar
         </button>
 
-        <EventImage
-          src="https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/08/3a/a7/15.jpg"
-          alt="Event"
-        />
+        {/* Componente de upload de imagem */}
+        <div className="mb-6">
+          <div className="flex justify-center mb-4">
+            <img
+              src={imagemUrl!}
+              width={150}
+              alt="Imagem do Evento"
+              className="rounded-md shadow-md"
+            />
+          </div>
 
-        <div className="space-y-6">
-          <EventNameInput
-            value={eventName}
-            onChange={(e) => setEventName(e.target.value)}
-          />
-          <EventRating rating={rating} onChange={setRating} />
-          <EventObservation
-            value={observation}
-            onChange={(e) => setObservation(e.target.value)}
+          {uploadError && (
+            <span role="errorImageRole" className="text-red-500">
+              Erro ao carregar a imagem. Tente novamente.
+            </span>
+          )}
+
+          {imagemUrl && (
+            <button
+              onClick={() => setImagemUrl(null)} // Limpar a URL da imagem
+              className="mt-4 text-blue-500 flex items-center"
+            >
+              <Trash className="mr-2 w-5 h-5 text-red-700" />
+              Limpar imagem
+            </button>
+          )}
+        </div>
+
+        {/* Input do título */}
+        <div className="mb-6">
+          <Label htmlFor="titulo" className="block mb-2">
+            Título do Evento
+          </Label>
+          <Input
+            id="titulo"
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
+            placeholder="Digite o título do evento"
+            required
           />
         </div>
 
-        <SubmitButton />
+        {/* Botão de enviar */}
+        <div className="flex justify-end">
+          <Button onClick={handleSubmit}>Salvar</Button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default EventRatingPage;
+export default CadastrarEvento;

@@ -16,12 +16,9 @@ export interface DeleteInput {
     id: string;
 }
 
-export interface CreateFullyPostDto {
+export interface CreateSimplePostDto {
     name: string;
-    description: string;
     image: string;
-    instagram: string;
-    userId: string;
 }
 
 export interface RegisterInput {
@@ -62,15 +59,8 @@ export interface Post {
     name: string;
     description: string;
     image: string;
-    additionalImages: string;
     instagram: string;
     createdAt: string;
-    user: User;
-}
-
-export interface ErrorTypeCreatePost {
-    path: string;
-    message: string;
 }
 
 export interface IQuery {
@@ -80,7 +70,7 @@ export interface IQuery {
 
 export interface IMutation {
     deleteUser(deleteInput: DeleteInput): DeleteResponse | Promise<DeleteResponse>;
-    createPost(createPostInput: CreateFullyPostDto): Post | Promise<Post>;
+    createPost(createPostInput: CreateSimplePostDto): Post | Promise<Post>;
     register(registerInput: RegisterInput): RegisterResponse | Promise<RegisterResponse>;
 }
 

@@ -7,6 +7,7 @@ interface EventCardProps {
   title: string;
   date?: string;
   location?: string;
+  onClick: () => void;
 }
 
 export default function EventCard({
@@ -15,21 +16,38 @@ export default function EventCard({
   title,
   date,
   location,
+  onClick,
 }: EventCardProps) {
   return (
-    <Card className="overflow-hidden rounded-xl border-2">
-      <CardContent className="p-0">
-        <div className="relative h-40 w-full">
-          <Image
-            src={imageSrc || "/placeholder.svg"}
-            alt={altText}
-            fill
-            className="object-cover"
-          />
+    <Card
+      className="overflow-hidden rounded-xl border-2 h-[630px] flex flex-col"
+      onClick={onClick}
+    >
+      <CardContent className="p-0 flex-grow relative h-full">
+        <div className="relative w-full h-full">
+          <div
+            style={{
+              width: "100%",
+              height: "150px",
+              overflow: "hidden",
+              position: "relative",
+            }}
+          >
+            <img
+              src={imageSrc || "/placeholder.svg"}
+              alt={altText}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover", // Corta a imagem para preencher o espaço
+                display: "block", // Remove espaços indesejados abaixo da imagem
+              }}
+            />
+          </div>
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
-            <p className="text-white text-sm font-medium">{title}</p>
+            <p className="text-white text-sm font-medium truncate">{title}</p>
             {date && location && (
-              <p className="text-white/80 text-xs">
+              <p className="text-white/80 text-xs truncate">
                 {date} • {location}
               </p>
             )}

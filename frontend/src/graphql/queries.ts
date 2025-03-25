@@ -13,7 +13,6 @@ export const GET_POSTS = gql`
     posts {
       name
       image
-      description
     }
   }
 `;
