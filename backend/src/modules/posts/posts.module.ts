@@ -10,7 +10,7 @@ import { UsersModule } from '../users/users.module';
     MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
     UsersModule,
   ],
-
   providers: [PostResolver, PostService],
+  exports: [PostService, MongooseModule], // Exporte o MongooseModule para ser usado em outros módulos
 })
 export class PostsModule {}

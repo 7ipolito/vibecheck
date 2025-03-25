@@ -43,9 +43,20 @@ type Post {
   createdAt: String!
 }
 
+type Ticket {
+  id: ID!
+  type: String!
+  price: Float!
+  bucketUrl: String
+  status: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
 type Query {
   whoami(whoamiInput: WhoamiInput!): User!
   posts: [Post!]!
+  tickets: [Ticket!]!
 }
 
 input WhoamiInput {
@@ -56,6 +67,7 @@ type Mutation {
   deleteUser(deleteInput: DeleteInput!): DeleteResponse!
   createPost(createPostInput: CreateSimplePostDto!): Post!
   register(registerInput: RegisterInput!): RegisterResponse!
+  createTicket(createTicketInput: CreateTicketDto!): Ticket!
 }
 
 input DeleteInput {
@@ -71,4 +83,11 @@ input RegisterInput {
   username: String!
   image: String
   walletAddress: String!
+}
+
+input CreateTicketDto {
+  eventId: String!
+  type: String!
+  price: Float!
+  bucketUrl: String
 }

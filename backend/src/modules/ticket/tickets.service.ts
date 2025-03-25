@@ -1,0 +1,34 @@
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+
+import { Ticket, TicketDocument } from './entities/ticket.entity';
+import { CreateTicketDto } from './dtos/create.ticket.dto';
+import { Post, PostDocument } from '../posts/entities/post.entity';
+
+@Injectable()
+export class TicketsService {
+  constructor(
+    @InjectModel(Ticket.name) private ticketModel: Model<TicketDocument>,
+    @InjectModel(Post.name) private postModel: Model<PostDocument>,
+  ) {}
+
+  async findAll(): Promise<Ticket[]> {
+    return this.ticketModel.find();
+  }
+
+  async createTicket(createTicketDTO: CreateTicketDto): Promise<Ticket> {
+    const { eventId, ...ticketData } = createTicketDTO;
+
+    const event = await this.postModel.find({ id: eventId });
+    if (!event) {
+      throw new Error('Event not found');
+    }
+
+    const ticket = new this.ticketModel({
+      ...ticketData,
+      event: eventId,
+    });
+    return ticket.save();
+  }
+}

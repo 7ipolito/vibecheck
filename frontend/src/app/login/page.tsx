@@ -65,7 +65,7 @@ export default function LoginPage() {
         </div>
         <h1 className="text-3xl font-bold tracking-tight">VibeCheck</h1>
         <p className="text-muted-foreground">
-          Find and purchase tickets r events selected by special users
+          Find and purchase tickets for events selected by special users
         </p>
 
         <Login />
