@@ -30,7 +30,7 @@ export function TicketSelector({
   onTicketSelect,
 }: TicketSelectorProps) {
   return (
-    <div className="pt-4 border-t">
+    <div className="pt-4 border-t ">
       <div className="flex justify-between items-center">
         <div className="space-y-2 w-full">
           <p className="text-sm text-muted-foreground">

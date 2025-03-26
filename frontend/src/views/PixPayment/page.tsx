@@ -117,7 +117,14 @@ export function PixPaymentView({ params }: PixPaymentViewProps) {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!paymentData) {
@@ -126,7 +133,7 @@ export function PixPaymentView({ params }: PixPaymentViewProps) {
 
   return (
     <main className="flex min-h-screen flex-col p-4">
-      <div className="w-full max-w-md mx-auto space-y-6">
+      <div className="w-full max-w-md mx-auto">
         <BackButton onClick={handleBack} />
 
         <div className="space-y-4">
@@ -144,7 +151,7 @@ export function PixPaymentView({ params }: PixPaymentViewProps) {
             pixCode={pixCode}
             pixQrCode={pixQrCode}
             onCheckPayment={checkPaymentStatus}
-            onNavigateToTickets={() => router.push("/dashboard")}
+            onNavigateToTickets={() => router.push("/my-tickets")}
           />
         </div>
       </div>

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Globe } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createUser, getUserData } from "@/lib/actions/user.action";
+import { storage } from "@/lib/storage";
 
 const walletAuthInput = (nonce: string): WalletAuthInput => {
   return {
@@ -95,6 +96,9 @@ export const Login = () => {
               "https://avatars.githubusercontent.com/u/45522944?v=4",
             username: MiniKit.user?.username,
           });
+
+          // Salvar walletAddress após criar usuário
+          storage.setWalletAddress(MiniKit.user.walletAddress);
 
           console.log(createUserResponse);
 

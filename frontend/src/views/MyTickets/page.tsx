@@ -5,7 +5,7 @@ import { TicketCard } from "@/entities/MyTickets/components/TicketCard";
 import { GET_USER_PAYMENTS } from "@/graphql/queries";
 import client from "@/lib/client";
 import { useEffect, useState } from "react";
-import { MiniKit } from "@worldcoin/minikit-js";
+import { storage } from "@/lib/storage";
 
 export function MyTicketsView() {
   const router = useRouter();
@@ -15,41 +15,77 @@ export function MyTicketsView() {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
+        const walletAddress = storage.getWalletAddress();
+
+        if (!walletAddress) {
+          router.push("/login");
+          return;
+        }
+        console.log(walletAddress);
         const { data } = await client.query({
           query: GET_USER_PAYMENTS,
           variables: {
-            userId: MiniKit.user?.walletAddress, // Você precisa passar o ID do usuário logado
+            walletAddress: walletAddress, // Usando a nova query que espera walletAddress
           },
         });
 
+        console.log("Payments received:", data);
         setPayments(data.userPayments);
       } catch (error) {
         console.error("Error fetching payments:", error);
+        // Se houver erro na autenticação, redirecionar para login
+        // if (
+        //   error.message.includes("User not found") ||
+        //   error.message.includes("unauthorized")
+        // ) {
+        //   storage.clearWalletAddress();
+        //   router.push("/login");
+        // }
       } finally {
         setLoading(false);
       }
     };
 
     fetchPayments();
-  }, []);
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <main className="flex min-h-screen flex-col p-4">
-      <div className="w-full max-w-md mx-auto space-y-6">
-        <BackButton onClick={() => router.back()} />
+      <div className="w-full max-w-md mx-auto">
+        <BackButton onClick={() => router.push("/login")} />
 
         <div className="space-y-4">
           <h1 className="text-2xl font-bold">My Tickets</h1>
 
-          <div className="grid gap-4">
-            {/* Aqui você pode mapear seus tickets */}
-            <TicketCard
-              eventName="Example Event"
-              ticketType="VIP"
-              date="2024-03-26"
-              onClick={() => console.log("clicked")}
-            />
-          </div>
+          {payments.length === 0 ? (
+            <p className="text-center text-muted-foreground">
+              No tickets found
+            </p>
+          ) : (
+            <div className="grid gap-4">
+              {payments.map((payment: any) => (
+                <TicketCard
+                  key={payment._id}
+                  eventName={payment.ticket.event.name}
+                  ticketType={payment.ticket.type}
+                  date={new Date(payment.createdAt).toLocaleDateString()}
+                  status={payment.status}
+                  method={payment.method || "pending"}
+                  onClick={() => {
+                    window.open(payment.ticket.bucketUrl, "_blank");
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </main>
