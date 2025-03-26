@@ -34,7 +34,21 @@ export interface CreatePostParams {
 }
 
 export interface GetPostParams {
+  _id: string;
   name: string;
   image: string;
   description: string;
+}
+
+export interface GetTicketParams {
+  _id: string;
+  name: string;
+  price: number;
+  description: string;
+  image: string;
+  event: {
+    _id: string;
+    name: string;
+    image: string;
+  };
 }

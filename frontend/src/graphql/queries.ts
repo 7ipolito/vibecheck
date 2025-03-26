@@ -11,8 +11,23 @@ export const GET_WHOAMI = gql`
 export const GET_POSTS = gql`
   query {
     posts {
+      _id
       name
       image
+    }
+  }
+`;
+
+export const GET_TICKET = gql`
+  query GetTickets($findTicketInput: FindTicketDTo!) {
+    tickets(findTicketInput: $findTicketInput) {
+      id
+      type
+      price
+      event {
+        name
+        image
+      }
     }
   }
 `;

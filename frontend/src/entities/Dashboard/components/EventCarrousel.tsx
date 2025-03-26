@@ -25,7 +25,6 @@ export default function EventCarousel() {
     const fetchPosts = async () => {
       try {
         const { data } = await client.query({ query: GET_POSTS });
-        console.log(data);
         setPostsData(data.posts || []);
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -37,8 +36,9 @@ export default function EventCarousel() {
     fetchPosts();
   }, []);
 
-  const handleSelect = () => {
-    router.push("/event/1 ");
+  const handleSelect = (event: GetPostParams) => {
+    console.log(event);
+    router.push(`/event/${event._id}`);
   };
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export default function EventCarousel() {
             {postsData.map((event, index) => (
               <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                 <EventCard
-                  onClick={handleSelect}
+                  onClick={() => handleSelect(event)}
                   imageSrc={event.image}
                   altText={event.name}
                   title={event.name}

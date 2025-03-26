@@ -1,76 +1,103 @@
-import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin, Link } from "lucide-react";
-import React from "react";
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import client from "@/lib/client";
+import { GET_TICKET } from "@/graphql/queries";
+import type { GetTicketParams } from "@/lib/actions/shared.types";
+import { EventDescription } from "@/entities/Event/components/EventDescription";
+import { EventDetails } from "@/entities/Event/components/EventDetails";
+import { EventHeader } from "@/entities/Event/components/EventHeader";
+import { PaymentButton } from "@/entities/Event/components/PaymentButton";
+import { TicketSelector } from "@/entities/Event/components/TicketSelection";
+import EventImage from "@/entities/Rating/components/EventImage";
+
 interface EventPageProps {
   params: {
     id: string;
   };
 }
 
-const EventView = ({ params }: EventPageProps) => {
-  const eventData = {
-    id: params.id,
-    title: params.id === "1" ? "Music Festival" : "Food & Wine Festival",
-    date: params.id === "1" ? "April 15, 2025" : "April 16, 2025",
-    time: "2:00 PM - 10:00 PM",
-    location: params.id === "1" ? "Ibirapuera Park" : "Downtown São Paulo",
-    description:
-      "Join us for an unforgettable experience with amazing performances, great food, and wonderful company.",
-    price: "R$ 85,00",
+export default function EventView({ params }: EventPageProps) {
+  const router = useRouter();
+  const [eventData, setEventData] = useState<GetTicketParams | null>(null);
+  const [selectedTicket, setSelectedTicket] = useState<string>("");
+  const [ticketData, setTicketData] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const { data } = await client.query({
+          query: GET_TICKET,
+          variables: {
+            findTicketInput: {
+              eventId: params.id,
+            },
+          },
+        });
+
+        if (!data.tickets || data.tickets.length === 0) {
+          router.push("/dashboard");
+          return;
+        }
+
+        setTicketData(data.tickets || []);
+        setEventData(data.tickets[0] || []);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+        router.push("/");
+      }
+    };
+
+    fetchPosts();
+  }, [router, params.id]);
+
+  const handleTicketSelect = (value: string) => {
+    setSelectedTicket(value);
   };
+
+  const handleBack = () => {
+    router.back();
+  };
+
+  const handlePayment = () => {
+    console.log("Navigating to payment screen");
+    router.push(`/payment-selection/1`);
+  };
+
   return (
     <main className="flex min-h-screen flex-col p-4">
       <div className="w-full max-w-md mx-auto space-y-6">
-        <div className="relative w-full h-48 rounded-lg overflow-hidden">
-          <Image
-            src="/placeholder.svg?height=192&width=384"
-            alt={eventData.title}
-            fill
-            className="object-cover"
-          />
-        </div>
+        <EventHeader onBack={handleBack} />
 
-        <div className="space-y-4">
-          <h1 className="text-2xl font-bold">{eventData.title}</h1>
+        {eventData?.event && (
+          <>
+            <EventImage
+              src={eventData.event.image}
+              alt={eventData.event.name || "Event image"}
+            />
 
-          <div className="space-y-2">
-            <div className="flex items-center text-sm">
-              <Calendar className="mr-2 h-4 w-4 text-muted-foreground" />
-              <span>{eventData.date}</span>
-            </div>
-            <div className="flex items-center text-sm">
-              <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
-              <span>{eventData.time}</span>
-            </div>
-            <div className="flex items-center text-sm">
-              <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
-              <span>{eventData.location}</span>
-            </div>
-          </div>
+            <div className="space-y-2">
+              <h1 className="text-2xl font-bold">{eventData.event.name}</h1>
 
-          <div className="space-y-2">
-            <h2 className="font-medium">About this event</h2>
-            <p className="text-sm text-muted-foreground">
-              {eventData.description}
-            </p>
-          </div>
+              <EventDetails />
 
-          <div className="pt-4 border-t">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-sm text-muted-foreground">Price</p>
-                <p className="font-medium">{eventData.price}</p>
-              </div>
-              <Link href={`/event/${params.id}/booking`}>
-                <Button>Select Tickets</Button>
-              </Link>
+              <EventDescription />
+
+              <TicketSelector
+                ticketData={ticketData}
+                selectedTicket={selectedTicket}
+                onTicketSelect={handleTicketSelect}
+              />
+
+              <PaymentButton
+                disabled={!selectedTicket}
+                onClick={handlePayment}
+              />
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </main>
   );
-};
-
-export default EventView;
+}
