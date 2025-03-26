@@ -76,3 +76,22 @@ export const ADD_COMMENT = gql`
     }
   }
 `;
+
+export const CREATE_PAYMENT = gql`
+  mutation CreatePayment($input: CreatePaymentInitialDto!) {
+    createPayment(input: $input) {
+      id
+      status
+      amount
+      ticket {
+        type
+        price
+        event {
+          name
+          _id
+        }
+      }
+      createdAt
+    }
+  }
+`;

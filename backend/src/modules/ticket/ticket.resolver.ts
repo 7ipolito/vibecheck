@@ -18,6 +18,11 @@ export class TicketsResolver {
     return this.ticketsService.findByPostId(findTicketDTO.eventId);
   }
 
+  @Query(() => Ticket, { name: 'ticket' })
+  findById(@Args('id') id: string) {
+    return this.ticketsService.findById(id);
+  }
+
   @Mutation(() => Ticket)
   async createTicket(
     @Args('createTicketInput') createTicketDTO: CreateTicketDto,

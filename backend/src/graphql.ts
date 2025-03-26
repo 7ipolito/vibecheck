@@ -38,6 +38,14 @@ export interface RegisterInput {
     walletAddress: string;
 }
 
+export interface CreatePaymentDto {
+    ticketId: string;
+    method: string;
+    amount: number;
+    worldcoinVerificationId?: Nullable<string>;
+    worldcoinNullifier?: Nullable<string>;
+}
+
 export interface Post {
     _id: string;
     name: string;
@@ -87,10 +95,28 @@ export interface Ticket {
     updatedAt: string;
 }
 
+export interface Payment {
+    id: string;
+    ticket: Ticket;
+    method?: Nullable<string>;
+    amount: number;
+    status: string;
+    transactionId?: Nullable<string>;
+    pixCopiaECola?: Nullable<string>;
+    pixQrCodeUrl?: Nullable<string>;
+    worldcoinVerificationId?: Nullable<string>;
+    worldcoinNullifier?: Nullable<string>;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export interface IQuery {
     whoami(whoamiInput: WhoamiInput): User | Promise<User>;
     posts(): Post[] | Promise<Post[]>;
     tickets(findTicketInput: FindTicketDTo): Ticket[] | Promise<Ticket[]>;
+    ticket(id: string): Ticket | Promise<Ticket>;
+    payments(): Payment[] | Promise<Payment[]>;
+    payment(id: string): Payment | Promise<Payment>;
 }
 
 export interface IMutation {
@@ -98,6 +124,8 @@ export interface IMutation {
     createPost(createPostInput: CreateSimplePostDto): Post | Promise<Post>;
     createTicket(createTicketInput: CreateTicketDto): Ticket | Promise<Ticket>;
     register(registerInput: RegisterInput): RegisterResponse | Promise<RegisterResponse>;
+    createPayment(input: CreatePaymentDto): Payment | Promise<Payment>;
+    updatePaymentStatus(id: string, status: string): Payment | Promise<Payment>;
 }
 
 export type DateTime = any;

@@ -2,44 +2,74 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { GET_PAYMENT } from "@/graphql/queries";
 import BackButton from "@/components/BackButton";
 import OrderSummary from "@/entities/PixPayment/components/OrderSummary";
 import PixPayment from "@/entities/PixPayment/components/PixPayment";
 import { createPixPayment } from "@/lib/actions/payment.action";
+import client from "@/lib/client";
 
 interface PixPaymentViewProps {
   params: {
     id: string;
   };
-  searchParams: {
-    ticketType: string;
-    price: string;
-    eventName: string;
-  };
 }
 
-export function PixPaymentView({ params, searchParams }: PixPaymentViewProps) {
+export function PixPaymentView({ params }: PixPaymentViewProps) {
   const router = useRouter();
-  const [pixCode, setPixCode] = useState<string>("");
-  const [pixQrCode, setPixQrCode] = useState<string>("");
-  const [copied, setCopied] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [paymentData, setPaymentData] = useState<any>(null);
   const [paymentStatus, setPaymentStatus] = useState<
     "pending" | "completed" | "failed"
   >("pending");
+  const [pixCode, setPixCode] = useState("");
+  const [pixQrCode, setPixQrCode] = useState("");
+  const [copied, setCopied] = useState(false);
 
-  const eventId = params.id;
-  const { ticketType, price, eventName } = searchParams;
+  useEffect(() => {
+    const fetchPayment = async () => {
+      try {
+        console.log("Fetching payment with ID:", params.id); // Debug log
+
+        const { data } = await client.query({
+          query: GET_PAYMENT,
+          variables: {
+            id: params.id,
+          },
+        });
+
+        console.log("Payment data received:", data); // Debug log
+
+        if (data?.payment) {
+          setPaymentData(data.payment);
+        } else {
+          console.error("No payment data received");
+          router.push("/dashboard");
+        }
+      } catch (error) {
+        console.error("Error fetching payment:", error);
+        router.push("/");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (params.id) {
+      fetchPayment();
+    }
+  }, [params.id, router]);
 
   useEffect(() => {
     const generatePixPayment = async () => {
+      if (!paymentData) return;
+
       setLoading(true);
       try {
         const result = await createPixPayment({
-          eventId,
-          ticketType,
-          price: Number.parseFloat(price),
-          description: `Ticket for ${eventName} - ${ticketType}`,
+          eventId: paymentData.ticket.event.id,
+          ticketType: paymentData.ticket.type,
+          price: paymentData.amount,
+          description: `Ticket for ${paymentData.ticket.event.name} - ${paymentData.ticket.type}`,
         });
 
         if (result.success) {
@@ -55,10 +85,10 @@ export function PixPaymentView({ params, searchParams }: PixPaymentViewProps) {
       }
     };
 
-    if (eventId && ticketType && price) {
+    if (paymentData) {
       generatePixPayment();
     }
-  }, [eventId, ticketType, price, eventName]);
+  }, [paymentData]);
 
   useEffect(() => {
     const checkInterval = setInterval(() => {
@@ -66,7 +96,7 @@ export function PixPaymentView({ params, searchParams }: PixPaymentViewProps) {
     }, 5000);
 
     return () => clearInterval(checkInterval);
-  }, [eventId]);
+  }, [params.id]);
 
   const copyPixCode = () => {
     navigator.clipboard.writeText(pixCode);
@@ -86,6 +116,14 @@ export function PixPaymentView({ params, searchParams }: PixPaymentViewProps) {
     }, 1500);
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!paymentData) {
+    return null;
+  }
+
   return (
     <main className="flex min-h-screen flex-col p-4">
       <div className="w-full max-w-md mx-auto space-y-6">
@@ -95,9 +133,9 @@ export function PixPaymentView({ params, searchParams }: PixPaymentViewProps) {
           <h1 className="text-2xl font-bold">Payment</h1>
 
           <OrderSummary
-            eventName={searchParams.eventName}
-            ticketType={searchParams.ticketType}
-            price={searchParams.price}
+            eventName={paymentData.ticket.event.name}
+            ticketType={paymentData.ticket.type}
+            price={paymentData.amount}
           />
 
           <PixPayment
