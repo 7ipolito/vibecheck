@@ -34,14 +34,11 @@ export default async function RootLayout({
           href="https://fonts.googleapis.com/css2?family=DM+Mono:ital@0;1&family=Rubik:ital,wght@0,300..900;1,300..900&family=Sora:wght@600&display=swap"
           rel="stylesheet"
         />
-        <link href="css/star-rating.css" rel="stylesheet" />
       </head>
       <body className={sora.className}>
-        <NextAuthProvider>
-          <ErudaProvider>
-            <MiniKitProvider>{children}</MiniKitProvider>
-          </ErudaProvider>
-        </NextAuthProvider>
+        <ErudaProvider>
+          <MiniKitProvider>{children}</MiniKitProvider>
+        </ErudaProvider>
       </body>
     </html>
   );

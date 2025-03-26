@@ -25,5 +25,5 @@ export const ClientContent = () => {
   useEffect(() => {
     setIsI(MiniKit.isInstalled());
   }, []);
-  return <Dashboard />;
+  return <Login />;
 };
