@@ -10,7 +10,6 @@ import { TicketsModule } from '../ticket/ticket.module';
   imports: [
     MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
     UsersModule,
-
     forwardRef(() => TicketsModule), // Usando forwardRef para evitar circularidade
   ],
   providers: [PostResolver, PostService],

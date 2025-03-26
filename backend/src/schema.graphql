@@ -56,10 +56,29 @@ type Ticket {
   updatedAt: String!
 }
 
+type Payment {
+  id: ID!
+  ticket: Ticket!
+  method: String
+  amount: Float!
+  status: String!
+  transactionId: String
+  pixCopiaECola: String
+  pixQrCodeUrl: String
+  worldcoinVerificationId: String
+  worldcoinNullifier: String
+  createdAt: String!
+  updatedAt: String!
+}
+
 type Query {
   whoami(whoamiInput: WhoamiInput!): User!
   posts: [Post!]!
   tickets(findTicketInput: FindTicketDTo!): [Ticket!]!
+  ticket(id: String!): Ticket!
+  payments: [Payment!]!
+  payment(id: String!): Payment!
+  userPayments(userId: String!): [Payment!]!
 }
 
 input WhoamiInput {
@@ -75,6 +94,8 @@ type Mutation {
   createPost(createPostInput: CreateSimplePostDto!): Post!
   createTicket(createTicketInput: CreateTicketDto!): Ticket!
   register(registerInput: RegisterInput!): RegisterResponse!
+  createPayment(input: CreatePaymentDto!): Payment!
+  updatePaymentStatus(id: String!, status: String!): Payment!
 }
 
 input DeleteInput {
@@ -97,4 +118,13 @@ input RegisterInput {
   username: String!
   image: String
   walletAddress: String!
+}
+
+input CreatePaymentDto {
+  userId: String!
+  ticketId: String!
+  method: String!
+  amount: Float!
+  worldcoinVerificationId: String
+  worldcoinNullifier: String
 }

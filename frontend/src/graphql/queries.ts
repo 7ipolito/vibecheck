@@ -32,6 +32,17 @@ export const GET_TICKET = gql`
   }
 `;
 
+export const CREATE_PAYMENT = gql`
+  mutation CreatePayment($input: CreatePaymentDto!) {
+    createPayment(input: $input) {
+      id
+      status
+      amount
+      createdAt
+    }
+  }
+`;
+
 export const GET_ALL_COMMENTS = gql`
   query GetAllComments($postId: String!) {
     getAllComments(postId: $postId) {
@@ -41,6 +52,64 @@ export const GET_ALL_COMMENTS = gql`
         image
       }
       createdAt
+    }
+  }
+`;
+
+export const GET_TICKET_BY_ID = gql`
+  query GetTicketById($id: String!) {
+    ticket(id: $id) {
+      id
+      type
+      price
+      status
+      event {
+        _id
+        name
+        description
+        image
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const GET_PAYMENT = gql`
+  query GetPayment($id: String!) {
+    payment(id: $id) {
+      id
+      status
+      amount
+      ticket {
+        id
+        type
+        event {
+          name
+        }
+      }
+    }
+  }
+`;
+
+export const GET_USER_PAYMENTS = gql`
+  query GetUserPayments($userId: String!) {
+    userPayments(userId: $userId) {
+      id
+      status
+      method
+      amount
+      createdAt
+      ticket {
+        id
+        type
+        price
+        event {
+          id
+          name
+          image
+        }
+      }
     }
   }
 `;

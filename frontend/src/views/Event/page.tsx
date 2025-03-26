@@ -9,7 +9,10 @@ import { EventDescription } from "@/entities/Event/components/EventDescription";
 import { EventDetails } from "@/entities/Event/components/EventDetails";
 import { EventHeader } from "@/entities/Event/components/EventHeader";
 import { PaymentButton } from "@/entities/Event/components/PaymentButton";
-import { TicketSelector } from "@/entities/Event/components/TicketSelection";
+import {
+  Ticket,
+  TicketSelector,
+} from "@/entities/Event/components/TicketSelection";
 import EventImage from "@/entities/Rating/components/EventImage";
 
 interface EventPageProps {
@@ -22,7 +25,7 @@ export default function EventView({ params }: EventPageProps) {
   const router = useRouter();
   const [eventData, setEventData] = useState<GetTicketParams | null>(null);
   const [selectedTicket, setSelectedTicket] = useState<string>("");
-  const [ticketData, setTicketData] = useState([]);
+  const [ticketData, setTicketData] = useState<Ticket[]>([]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -52,8 +55,8 @@ export default function EventView({ params }: EventPageProps) {
     fetchPosts();
   }, [router, params.id]);
 
-  const handleTicketSelect = (value: string) => {
-    setSelectedTicket(value);
+  const handleTicketSelect = (ticketId: string) => {
+    setSelectedTicket(ticketId);
   };
 
   const handleBack = () => {
@@ -61,8 +64,8 @@ export default function EventView({ params }: EventPageProps) {
   };
 
   const handlePayment = () => {
-    console.log("Navigating to payment screen");
-    router.push(`/payment-selection/1`);
+    if (!selectedTicket) return;
+    router.push(`/payment-selection/${selectedTicket.id}`);
   };
 
   return (

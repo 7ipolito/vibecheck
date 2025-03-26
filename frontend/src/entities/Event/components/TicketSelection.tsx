@@ -7,10 +7,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { GetTicketParams } from "@/lib/actions/shared.types";
 
+export interface Ticket {
+  _id: string;
+  type: string;
+  price: number;
+  event: {
+    _id: string;
+    name: string;
+  };
+}
 interface TicketSelectorProps {
   ticketData: any[];
-  selectedTicket: string;
+  selectedTicket: Ticket;
   onTicketSelect: (value: string) => void;
 }
 
@@ -38,7 +48,7 @@ export function TicketSelector({
             </SelectTrigger>
             <SelectContent>
               {ticketData?.map((ticket: any) => (
-                <SelectItem key={ticket.type} value={ticket.type}>
+                <SelectItem key={ticket.type} value={ticket}>
                   {ticket.type} - R${" "}
                   {ticket.price.toLocaleString("pt-BR", {
                     minimumFractionDigits: 2,
@@ -49,11 +59,11 @@ export function TicketSelector({
           </Select>
           {selectedTicket && (
             <p className="text-sm font-medium mt-2">
-              Selected Type: {selectedTicket}
+              Selected Type: {selectedTicket.type}
               <br />
               Price: R${" "}
               {ticketData
-                .find((t: any) => t.type === selectedTicket)
+                .find((t: any) => t.type === selectedTicket.type)
                 ?.price.toLocaleString("pt-BR", {
                   minimumFractionDigits: 2,
                 })}

@@ -11,6 +11,9 @@ import { UserResolver } from './users.resolver';
   ],
 
   providers: [UserResolver, UserService, JwtService],
-  exports: [MongooseModule],
+  exports: [
+    UserService,
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+  ],
 })
 export class UsersModule {}

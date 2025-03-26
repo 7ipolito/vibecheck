@@ -1,52 +1,127 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { PaymentMethodSelector } from "@/entities/PaymentSelection/components/PaymentMethodSelector";
 import { OrderSummary } from "@/entities/PaymentSelection/components/OrderSummary";
+import { GET_TICKET_BY_ID, CREATE_PAYMENT } from "@/graphql/queries";
+import { useWalletAddress } from "@/hooks/useWalletAddress";
+import client from "@/lib/client";
 
 interface PaymentSelectionProps {
   params: {
     id: string;
   };
-  searchParams: {
-    ticketType: string;
-    price: string;
-    eventName: string;
-  };
 }
 
 export default function PaymentSelectionPage({
   params,
-  searchParams,
 }: PaymentSelectionProps) {
   const router = useRouter();
   const [selectedMethod, setSelectedMethod] = useState<
     "pix" | "worldcoin" | null
   >(null);
   const [loading, setLoading] = useState(false);
+  const [ticketData, setTicketData] = useState<any>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
-  const eventId = params.id;
-  const { ticketType, price, eventName } = searchParams;
+  useEffect(() => {
+    const initializeUser = async () => {
+      const walletAddress = await useWalletAddress();
+      if (!walletAddress) {
+        router.push("/login");
+        return;
+      }
+
+      try {
+        const { data } = await client.query({
+          query: GET_USER,
+          variables: {
+            whoamiInput: {
+              walletAdddress: walletAddress,
+            },
+          },
+        });
+
+        if (data.whoami) {
+          setUserId(data.whoami._id);
+        } else {
+          router.push("/login");
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        router.push("/login");
+      }
+    };
+
+    initializeUser();
+  }, [router]);
+
+  useEffect(() => {
+    const fetchTicket = async () => {
+      try {
+        const { data } = await client.query({
+          query: GET_TICKET_BY_ID,
+          variables: {
+            id: params.id,
+          },
+        });
+
+        console.log(data);
+
+        setTicketData(data.ticket);
+      } catch (error) {
+        console.error("Error fetching ticket:", error);
+        router.push("/");
+      }
+    };
+
+    fetchTicket();
+  }, [router, params.id]);
 
   const handleBack = () => {
     router.back();
   };
 
-  const handleContinue = () => {
-    if (!selectedMethod) return;
+  const handleContinue = async () => {
+    if (!selectedMethod || !ticketData || !userId) return;
 
     setLoading(true);
+    try {
+      const { data } = await client.mutate({
+        mutation: CREATE_PAYMENT,
+        variables: {
+          input: {
+            userId: userId,
+            ticketId: params.id,
+            method: selectedMethod.toUpperCase(),
+            amount: ticketData.price,
+          },
+        },
+      });
+      console.log("payment created");
 
-    const routeMap = {
-      pix: `/pix-payment/${eventId}?ticketType=${ticketType}&price=${price}&eventName=${eventName}`,
-      worldcoin: `/worldcoin-payment/${eventId}?ticketType=${ticketType}&price=${price}&eventName=${eventName}`,
-    };
+      console.log(data);
 
-    router.push(routeMap[selectedMethod]);
+      if (data.createPayment) {
+        const routeMap = {
+          pix: `/pix-payment/${data.createPayment._id}`,
+          worldcoin: `/worldcoin-payment/${data.createPayment._id}`,
+        };
+
+        router.push(routeMap[selectedMethod]);
+      }
+    } catch (error) {
+      console.error("Error creating payment:", error);
+      setLoading(false);
+    }
   };
+
+  if (!userId) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <main className="flex min-h-screen flex-col p-4">
@@ -60,28 +135,30 @@ export default function PaymentSelectionPage({
           Back
         </Button>
 
-        <div className="space-y-4">
-          <h1 className="text-2xl font-bold">Choose Payment Method</h1>
+        {ticketData && (
+          <div className="space-y-4">
+            <h1 className="text-2xl font-bold">Choose Payment Method</h1>
 
-          <OrderSummary
-            eventName={eventName}
-            ticketType={ticketType}
-            price={price}
-          />
+            <OrderSummary
+              eventName={ticketData.event.name}
+              ticketType={ticketData.type}
+              price={ticketData.price}
+            />
 
-          <PaymentMethodSelector
-            selectedMethod={selectedMethod}
-            setSelectedMethod={setSelectedMethod}
-          />
+            <PaymentMethodSelector
+              selectedMethod={selectedMethod}
+              setSelectedMethod={setSelectedMethod}
+            />
 
-          <Button
-            onClick={handleContinue}
-            className="w-full py-6 text-lg font-medium bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-            disabled={!selectedMethod || loading}
-          >
-            {loading ? "Processing..." : "Continue to payment"}
-          </Button>
-        </div>
+            <Button
+              onClick={handleContinue}
+              className="w-full py-6 text-lg font-medium bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              disabled={!selectedMethod || loading}
+            >
+              {loading ? "Processing..." : "Continue to payment"}
+            </Button>
+          </div>
+        )}
       </div>
     </main>
   );

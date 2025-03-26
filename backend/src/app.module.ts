@@ -8,6 +8,7 @@ import { UsersModule } from './modules/users/users.module';
 import { RegisterModule } from './modules/register/register.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { TicketsModule } from './modules/ticket/ticket.module';
+import { PaymentsModule } from './modules/payments/payments.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { TicketsModule } from './modules/ticket/ticket.module';
     PostsModule,
     RegisterModule,
     TicketsModule,
+    PaymentsModule,
   ],
 })
 export class AppModule {}
