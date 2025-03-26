@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Ticket } from 'src/modules/ticket/entities/ticket.entity';
+import { User } from 'src/modules/users/entities/user.entity';
 
 export enum PaymentMethod {
   PIX = 'pix',
@@ -18,6 +19,10 @@ export enum PaymentStatus {
 export class Payment extends Document {
   @Field(() => String)
   _id: MongooseSchema.Types.ObjectId;
+
+  @Field(() => User)
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
+  user: MongooseSchema.Types.ObjectId;
 
   @Field(() => Ticket)
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Ticket', required: true })

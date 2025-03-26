@@ -35,4 +35,9 @@ export class PaymentsResolver {
   async getPayment(@Args('id', { type: () => String }) id: string) {
     return this.paymentsService.findPaymentById(id);
   }
+
+  @Query(() => [Payment])
+  async userPayments(@Args('userId', { type: () => String }) userId: string) {
+    return this.paymentsService.findPaymentsByUser(userId);
+  }
 }

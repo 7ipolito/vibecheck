@@ -91,3 +91,25 @@ export const GET_PAYMENT = gql`
     }
   }
 `;
+
+export const GET_USER_PAYMENTS = gql`
+  query GetUserPayments($userId: String!) {
+    userPayments(userId: $userId) {
+      id
+      status
+      method
+      amount
+      createdAt
+      ticket {
+        id
+        type
+        price
+        event {
+          id
+          name
+          image
+        }
+      }
+    }
+  }
+`;

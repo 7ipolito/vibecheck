@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { PaymentMethodSelector } from "@/entities/PaymentSelection/components/PaymentMethodSelector";
 import { OrderSummary } from "@/entities/PaymentSelection/components/OrderSummary";
 import { GET_TICKET_BY_ID, CREATE_PAYMENT } from "@/graphql/queries";
+import { useWalletAddress } from "@/hooks/useWalletAddress";
 import client from "@/lib/client";
 
 interface PaymentSelectionProps {
@@ -24,6 +25,39 @@ export default function PaymentSelectionPage({
   >(null);
   const [loading, setLoading] = useState(false);
   const [ticketData, setTicketData] = useState<any>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const initializeUser = async () => {
+      const walletAddress = await useWalletAddress();
+      if (!walletAddress) {
+        router.push("/login");
+        return;
+      }
+
+      try {
+        const { data } = await client.query({
+          query: GET_USER,
+          variables: {
+            whoamiInput: {
+              walletAdddress: walletAddress,
+            },
+          },
+        });
+
+        if (data.whoami) {
+          setUserId(data.whoami._id);
+        } else {
+          router.push("/login");
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        router.push("/login");
+      }
+    };
+
+    initializeUser();
+  }, [router]);
 
   useEffect(() => {
     const fetchTicket = async () => {
@@ -52,7 +86,7 @@ export default function PaymentSelectionPage({
   };
 
   const handleContinue = async () => {
-    if (!selectedMethod || !ticketData) return;
+    if (!selectedMethod || !ticketData || !userId) return;
 
     setLoading(true);
     try {
@@ -60,6 +94,7 @@ export default function PaymentSelectionPage({
         mutation: CREATE_PAYMENT,
         variables: {
           input: {
+            userId: userId,
             ticketId: params.id,
             method: selectedMethod.toUpperCase(),
             amount: ticketData.price,
@@ -72,8 +107,8 @@ export default function PaymentSelectionPage({
 
       if (data.createPayment) {
         const routeMap = {
-          pix: `/pix-payment/${data.createPayment.id}`,
-          worldcoin: `/worldcoin-payment/${data.createPayment.id}`,
+          pix: `/pix-payment/${data.createPayment._id}`,
+          worldcoin: `/worldcoin-payment/${data.createPayment._id}`,
         };
 
         router.push(routeMap[selectedMethod]);
@@ -83,6 +118,10 @@ export default function PaymentSelectionPage({
       setLoading(false);
     }
   };
+
+  if (!userId) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <main className="flex min-h-screen flex-col p-4">

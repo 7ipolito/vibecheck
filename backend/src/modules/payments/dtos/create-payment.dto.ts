@@ -4,6 +4,9 @@ import { PaymentMethod } from '../entities/payment.entity';
 @InputType()
 export class CreatePaymentDto {
   @Field(() => String)
+  userId: string;
+
+  @Field(() => String)
   ticketId: string;
 
   @Field(() => String)

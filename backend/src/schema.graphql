@@ -78,6 +78,7 @@ type Query {
   ticket(id: String!): Ticket!
   payments: [Payment!]!
   payment(id: String!): Payment!
+  userPayments(userId: String!): [Payment!]!
 }
 
 input WhoamiInput {
@@ -120,6 +121,7 @@ input RegisterInput {
 }
 
 input CreatePaymentDto {
+  userId: String!
   ticketId: String!
   method: String!
   amount: Float!

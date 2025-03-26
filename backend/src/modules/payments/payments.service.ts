@@ -4,34 +4,40 @@ import { Model } from 'mongoose';
 import {
   Payment,
   PaymentDocument,
-  PaymentMethod,
   PaymentStatus,
 } from './entities/payment.entity';
 import { CreatePaymentDto } from './dtos/create-payment.dto';
 import { TicketsService } from '../ticket/tickets.service';
+import { User, UserDocument } from '../users/entities/user.entity';
 
 @Injectable()
 export class PaymentsService {
   constructor(
     @InjectModel(Payment.name) private paymentModel: Model<PaymentDocument>,
     private ticketsService: TicketsService,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
 
   async createPayment(createPaymentDto: CreatePaymentDto): Promise<Payment> {
-    // Verificar se o ticket existe e pertence ao evento
-    const ticket = await this.ticketsService.findById(
-      createPaymentDto.ticketId,
-    );
+    const { userId, ticketId, ...rest } = createPaymentDto;
 
-    if (!ticket || !ticket.event) {
-      throw new NotFoundException('Ticket não encontrado para este evento');
+    // Verificar se o usuário existe
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    // Verificar se o ticket existe
+    const ticket = await this.ticketsService.findById(ticketId);
+    if (!ticket) {
+      throw new NotFoundException('Ticket não encontrado');
     }
 
     const payment = new this.paymentModel({
-      ticket: ticket._id,
-      amount: createPaymentDto.amount,
+      user: userId,
+      ticket: ticketId,
+      ...rest,
       status: PaymentStatus.PENDING,
-      method: PaymentMethod.PIX,
     });
 
     return payment.save();
@@ -75,6 +81,20 @@ export class PaymentsService {
     return this.paymentModel
       .findByIdAndUpdate(id, { status }, { new: true })
       .populate('ticket')
+      .exec();
+  }
+
+  async findPaymentsByUser(userId: string): Promise<Payment[]> {
+    return this.paymentModel
+      .find({ user: userId })
+      .populate({
+        path: 'ticket',
+        populate: {
+          path: 'event',
+        },
+      })
+      .populate('user')
+      .sort({ createdAt: -1 })
       .exec();
   }
 }

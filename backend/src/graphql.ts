@@ -39,6 +39,7 @@ export interface RegisterInput {
 }
 
 export interface CreatePaymentDto {
+    userId: string;
     ticketId: string;
     method: string;
     amount: number;
@@ -117,6 +118,7 @@ export interface IQuery {
     ticket(id: string): Ticket | Promise<Ticket>;
     payments(): Payment[] | Promise<Payment[]>;
     payment(id: string): Payment | Promise<Payment>;
+    userPayments(userId: string): Payment[] | Promise<Payment[]>;
 }
 
 export interface IMutation {
