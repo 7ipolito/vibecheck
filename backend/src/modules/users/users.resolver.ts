@@ -1,8 +1,9 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ResolveField } from '@nestjs/graphql';
 import { User } from './users.schema';
 import { UserService } from './users.service';
 import { DeleteInput, DeleteResponse } from './dtos/delete-user.dto';
 import { WhoamiInput } from './dtos/whoami.dto';
+import { Payment } from '../payments/schemas/payment.schema';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -23,6 +24,16 @@ export class UserResolver {
     }
 
     return user;
+  }
+
+  @Query(() => [Payment])
+  async userPayments(@Args('walletAddress') walletAddress: string) {
+    return this.usersService.getUserPayments(walletAddress);
+  }
+
+  @ResolveField('payments', () => [Payment])
+  async getPayments(walletAddress: string) {
+    return this.usersService.getUserPayments(walletAddress);
   }
 
   // @Mutation(() => DeleteResponse)
