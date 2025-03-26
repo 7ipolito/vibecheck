@@ -3,7 +3,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PaymentsService } from './payments.service';
 import { PaymentsResolver } from './payments.resolver';
 import { Payment, PaymentSchema } from './entities/payment.entity';
-import { UsersModule } from '../users/users.module';
 import { User, UserSchema } from '../users/entities/user.entity';
 import { TicketsModule } from '../ticket/ticket.module';
 
@@ -14,7 +13,6 @@ import { TicketsModule } from '../ticket/ticket.module';
       { name: User.name, schema: UserSchema },
     ]),
     TicketsModule,
-    UsersModule,
   ],
   providers: [PaymentsService, PaymentsResolver],
   exports: [PaymentsService],
