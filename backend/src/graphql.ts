@@ -64,6 +64,7 @@ export interface User {
     walletAddress: string;
     image: string;
     createdAt: DateTime;
+    payments: Payment[];
 }
 
 export interface ErrorTypeDelete {
@@ -73,16 +74,6 @@ export interface ErrorTypeDelete {
 
 export interface DeleteResponse {
     error?: Nullable<ErrorTypeDelete[]>;
-}
-
-export interface ErrorType {
-    path: string;
-    message: string;
-}
-
-export interface RegisterResponse {
-    error?: Nullable<ErrorType[]>;
-    success?: Nullable<boolean>;
 }
 
 export interface Ticket {
@@ -111,14 +102,24 @@ export interface Payment {
     updatedAt: string;
 }
 
+export interface ErrorType {
+    path: string;
+    message: string;
+}
+
+export interface RegisterResponse {
+    error?: Nullable<ErrorType[]>;
+    success?: Nullable<boolean>;
+}
+
 export interface IQuery {
     whoami(whoamiInput: WhoamiInput): User | Promise<User>;
+    userPayments(walletAddress: string): Payment[] | Promise<Payment[]>;
     posts(): Post[] | Promise<Post[]>;
     tickets(findTicketInput: FindTicketDTo): Ticket[] | Promise<Ticket[]>;
     ticket(id: string): Ticket | Promise<Ticket>;
     payments(): Payment[] | Promise<Payment[]>;
     payment(id: string): Payment | Promise<Payment>;
-    userPayments(userId: string): Payment[] | Promise<Payment[]>;
 }
 
 export interface IMutation {

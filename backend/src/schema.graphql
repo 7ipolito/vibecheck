@@ -24,6 +24,7 @@ type User {
   walletAddress: String!
   image: String!
   createdAt: DateTime!
+  payments: [Payment!]!
 }
 
 type ErrorTypeDelete {
@@ -33,16 +34,6 @@ type ErrorTypeDelete {
 
 type DeleteResponse {
   error: [ErrorTypeDelete!]
-}
-
-type ErrorType {
-  path: String!
-  message: String!
-}
-
-type RegisterResponse {
-  error: [ErrorType!]
-  success: Boolean
 }
 
 type Ticket {
@@ -71,14 +62,24 @@ type Payment {
   updatedAt: String!
 }
 
+type ErrorType {
+  path: String!
+  message: String!
+}
+
+type RegisterResponse {
+  error: [ErrorType!]
+  success: Boolean
+}
+
 type Query {
   whoami(whoamiInput: WhoamiInput!): User!
+  userPayments(walletAddress: String!): [Payment!]!
   posts: [Post!]!
   tickets(findTicketInput: FindTicketDTo!): [Ticket!]!
   ticket(id: String!): Ticket!
   payments: [Payment!]!
   payment(id: String!): Payment!
-  userPayments(userId: String!): [Payment!]!
 }
 
 input WhoamiInput {

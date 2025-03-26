@@ -84,17 +84,17 @@ export class PaymentsService {
       .exec();
   }
 
-  async findPaymentsByUser(userId: string): Promise<Payment[]> {
-    return this.paymentModel
-      .find({ user: userId })
-      .populate({
-        path: 'ticket',
-        populate: {
-          path: 'event',
-        },
-      })
-      .populate('user')
-      .sort({ createdAt: -1 })
-      .exec();
-  }
+  // async findPaymentsByUser(userId: string): Promise<Payment[]> {
+  //   return this.paymentModel
+  //     .find()
+  //     .populate({
+  //       path: 'ticket',
+  //       populate: {
+  //         path: 'event',
+  //       },
+  //     })
+  //     .populate('user')
+  //     .sort({ createdAt: -1 })
+  //     .exec();
+  // }
 }

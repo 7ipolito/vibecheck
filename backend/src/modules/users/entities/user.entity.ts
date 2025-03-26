@@ -1,7 +1,7 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import mongoose, { Document, Schema as MongooSchema } from 'mongoose';
+import { Document, Schema as MongooSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Post } from 'src/modules/posts/entities/post.entity';
+import { Payment } from 'src/modules/payments/entities/payment.entity';
 
 @ObjectType()
 @Schema({ timestamps: true })
@@ -25,12 +25,15 @@ export class User {
   @Prop({ required: true, unique: true })
   username: string;
 
+  @Field(() => [Payment], { nullable: true })
+  @Prop({
+    type: [{ type: MongooSchema.Types.ObjectId, ref: 'Payment' }],
+    default: [],
+  })
+  payments: Payment[];
+
   @Field(() => Date)
   createdAt: Date;
-
-  @Field(() => [Post])
-  @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }])
-  posts: Post[];
 }
 
 export type UserDocument = User & Document;

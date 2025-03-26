@@ -36,8 +36,8 @@ export class PaymentsResolver {
     return this.paymentsService.findPaymentById(id);
   }
 
-  @Query(() => [Payment])
-  async userPayments(@Args('userId', { type: () => String }) userId: string) {
-    return this.paymentsService.findPaymentsByUser(userId);
-  }
+  // @Query(() => [Payment])
+  // async userPayments(@Args('userId', { type: () => String }) userId: string) {
+  //   return this.paymentsService.findPaymentsByUser(userId);
+  // }
 }
