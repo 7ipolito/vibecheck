@@ -15,7 +15,7 @@ export function PaymentButton({
   onClick,
 }: PaymentButtonProps) {
   return (
-    <Button className="w-full" disabled={disabled} onClick={onClick}>
+    <Button className="w-full mb-10" disabled={disabled} onClick={onClick}>
       {loading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />

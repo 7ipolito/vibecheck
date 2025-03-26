@@ -21,7 +21,7 @@ export function PaymentMethodSelector({
     <RadioGroup
       value={selectedMethod || ""}
       onValueChange={(value) => setSelectedMethod(value as "pix" | "worldcoin")}
-      className="space-y-4"
+      className="space-y-4 "
     >
       <PaymentMethodCard
         id="pix"
@@ -65,7 +65,7 @@ function PaymentMethodCard({
 }) {
   return (
     <Card
-      className={`cursor-pointer transition-all ${
+      className={`cursor-pointer h-14 transition-all ${
         selectedMethod === value
           ? "border-primary ring-1 ring-primary"
           : "hover:border-muted-foreground"

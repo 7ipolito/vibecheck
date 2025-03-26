@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { PaymentMethodSelector } from "@/entities/PaymentSelection/components/PaymentMethodSelector";
 import { OrderSummary } from "@/entities/PaymentSelection/components/OrderSummary";
-import { GET_TICKET_BY_ID, CREATE_PAYMENT } from "@/graphql/queries";
-import { useWalletAddress } from "@/hooks/useWalletAddress";
+import { GET_TICKET_BY_ID, CREATE_PAYMENT, GET_USER } from "@/graphql/queries";
+import { storage } from "@/lib/storage";
 import client from "@/lib/client";
+import { MiniKit } from "@worldcoin/minikit-js";
 
 interface PaymentSelectionProps {
   params: {
@@ -29,13 +30,15 @@ export default function PaymentSelectionPage({
 
   useEffect(() => {
     const initializeUser = async () => {
-      const walletAddress = await useWalletAddress();
-      if (!walletAddress) {
-        router.push("/login");
-        return;
-      }
-
       try {
+        const walletAddress = storage.getWalletAddress();
+
+        if (!walletAddress) {
+          console.error("No wallet address found in storage");
+          router.push("/login");
+          return;
+        }
+
         const { data } = await client.query({
           query: GET_USER,
           variables: {
@@ -46,12 +49,16 @@ export default function PaymentSelectionPage({
         });
 
         if (data.whoami) {
+          console.log("User found:", data.whoami);
           setUserId(data.whoami._id);
         } else {
+          console.error("No user found");
+          storage.clearWalletAddress(); // Limpar endereço inválido
           router.push("/login");
         }
       } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error("Error initializing user:", error);
+        storage.clearWalletAddress(); // Limpar em caso de erro
         router.push("/login");
       }
     };
@@ -107,8 +114,8 @@ export default function PaymentSelectionPage({
 
       if (data.createPayment) {
         const routeMap = {
-          pix: `/pix-payment/${data.createPayment._id}`,
-          worldcoin: `/worldcoin-payment/${data.createPayment._id}`,
+          pix: `/pix-payment/${data.createPayment.id}`,
+          worldcoin: `/worldcoin-payment/${data.createPayment.id}`,
         };
 
         router.push(routeMap[selectedMethod]);
@@ -120,7 +127,14 @@ export default function PaymentSelectionPage({
   };
 
   if (!userId) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -136,7 +150,7 @@ export default function PaymentSelectionPage({
         </Button>
 
         {ticketData && (
-          <div className="space-y-4">
+          <div>
             <h1 className="text-2xl font-bold">Choose Payment Method</h1>
 
             <OrderSummary
@@ -152,7 +166,7 @@ export default function PaymentSelectionPage({
 
             <Button
               onClick={handleContinue}
-              className="w-full py-6 text-lg font-medium bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="w-full py-6 mt-8 text-lg font-medium bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
               disabled={!selectedMethod || loading}
             >
               {loading ? "Processing..." : "Continue to payment"}

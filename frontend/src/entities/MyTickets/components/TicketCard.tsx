@@ -1,10 +1,22 @@
-import { Ticket } from "lucide-react";
+"use client";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { CalendarDays, CreditCard, Tag, Ticket } from "lucide-react";
 
 interface TicketCardProps {
   eventName: string;
   ticketType: string;
   date: string;
+  status: string;
+  method: string;
   onClick: () => void;
 }
 
@@ -12,25 +24,76 @@ export function TicketCard({
   eventName,
   ticketType,
   date,
+  status,
+  method,
   onClick,
 }: TicketCardProps) {
+  // Function to determine badge color based on status
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "completed":
+        return {
+          backgroundColor: "#22c55e", // green-500
+          color: "white",
+        };
+      case "pending":
+        return {
+          backgroundColor: "#eab308", // yellow-500
+          color: "white",
+        };
+      case "failed":
+        return {
+          backgroundColor: "#ef4444", // red-500
+          color: "white",
+        };
+      default:
+        return {
+          backgroundColor: "#6b7280", // gray-500
+          color: "white",
+        };
+    }
+  };
+
   return (
-    <button
-      onClick={onClick}
-      className="w-full p-4 rounded-lg border bg-card text-card-foreground hover:bg-accent/50 transition-colors"
-    >
-      <div className="flex items-center justify-between">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <h3 className="font-medium">{eventName}</h3>
-            <Badge variant="secondary" className="text-xs">
-              {ticketType}
-            </Badge>
-          </div>
-          <p className="text-sm text-muted-foreground">{date}</p>
+    <Card className="overflow-hidden transition-all hover:shadow-md">
+      <CardHeader className="bg-primary/5 pb-2">
+        <div className="flex items-start justify-between">
+          <h3 className="font-bold text-lg line-clamp-1">{eventName}</h3>
+          <Badge style={getStatusColor(status)}>{status}</Badge>
         </div>
-        <Ticket className="h-6 w-6 text-muted-foreground" />
-      </div>
-    </button>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Tag className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm">{ticketType}</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <CalendarDays className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm">{date}</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <CreditCard className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm capitalize">{method}</span>
+          </div>
+        </div>
+      </CardContent>
+      <Separator />
+      <CardFooter className="pt-4 pb-4">
+        <Button
+          onClick={onClick}
+          className="w-full gap-2"
+          variant="default"
+          disabled={status.toLowerCase() !== "completed"}
+        >
+          <Ticket className="h-4 w-4" />
+          {status.toLowerCase() === "completed"
+            ? "See tickets"
+            : "Payment pending"}
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }

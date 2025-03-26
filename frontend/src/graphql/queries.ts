@@ -93,8 +93,8 @@ export const GET_PAYMENT = gql`
 `;
 
 export const GET_USER_PAYMENTS = gql`
-  query GetUserPayments($userId: String!) {
-    userPayments(userId: $userId) {
+  query UserPayments($walletAddress: String!) {
+    userPayments(walletAddress: $walletAddress) {
       id
       status
       method
@@ -104,12 +104,26 @@ export const GET_USER_PAYMENTS = gql`
         id
         type
         price
+        status
+        bucketUrl
         event {
-          id
+          _id
           name
           image
         }
       }
+    }
+  }
+`;
+
+export const GET_USER = gql`
+  query GetUser($whoamiInput: WhoamiInput!) {
+    whoami(whoamiInput: $whoamiInput) {
+      _id
+      username
+      walletAddress
+      image
+      createdAt
     }
   }
 `;

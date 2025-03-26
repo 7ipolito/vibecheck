@@ -8,9 +8,9 @@ interface EventImageProps {
 
 const EventImage: React.FC<EventImageProps> = ({ src, alt }) => {
   return (
-    <div className="mb-6 rounded-xl overflow-hidden border">
+    <div className="mb-6 rounded-xl overflow-hidden ">
       <div className="relative w-full h-64 bg-gray-100 flex items-center justify-center text-gray-500">
-        <img src={src} alt={alt} />
+        <img src={src} alt={alt} style={{ width: 100 }} />
       </div>
     </div>
   );
