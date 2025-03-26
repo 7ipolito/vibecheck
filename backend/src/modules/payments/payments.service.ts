@@ -7,14 +7,14 @@ import {
   PaymentStatus,
 } from './entities/payment.entity';
 import { CreatePaymentDto } from './dtos/create-payment.dto';
-import { TicketsService } from '../ticket/tickets.service';
 import { User, UserDocument } from '../users/entities/user.entity';
+import { TicketsService } from '../ticket/tickets.service';
 
 @Injectable()
 export class PaymentsService {
   constructor(
     @InjectModel(Payment.name) private paymentModel: Model<PaymentDocument>,
-    private ticketsService: TicketsService,
+    private readonly ticketsService: TicketsService,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
 
@@ -84,17 +84,23 @@ export class PaymentsService {
       .exec();
   }
 
-  // async findPaymentsByUser(userId: string): Promise<Payment[]> {
-  //   return this.paymentModel
-  //     .find()
-  //     .populate({
-  //       path: 'ticket',
-  //       populate: {
-  //         path: 'event',
-  //       },
-  //     })
-  //     .populate('user')
-  //     .sort({ createdAt: -1 })
-  //     .exec();
-  // }
+  async findPaymentsByUser(walletAddress: string): Promise<Payment[]> {
+    const user = await this.userModel.findOne({ walletAddress });
+
+    if (!user) {
+      return [];
+    }
+
+    const payments = await this.paymentModel
+      .find({ user: user._id })
+      .populate({
+        path: 'ticket',
+        populate: {
+          path: 'event',
+        },
+      })
+      .sort({ createdAt: -1 });
+
+    return payments;
+  }
 }
