@@ -16,7 +16,7 @@ export default async function RootLayout({
     {
       ssr: false,
     }
-  );
+  );    
 
   return (
     <html lang="en">

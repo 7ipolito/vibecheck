@@ -8,6 +8,7 @@ import EventCarousel from "@/entities/Dashboard/components/EventCarrousel";
 import Stories from "@/entities/Dashboard/components/Stories";
 import loading from "./loading";
 import { Button } from "@worldcoin/mini-apps-ui-kit-react";
+import BiggestEvents from "@/entities/Dashboard/components/BiggestEvents";
 
 function DashboardView() {
   const router = useRouter();
@@ -35,9 +36,9 @@ function DashboardView() {
         <DatePicker />
 
         <div className="space-y-4">
-          <h2 className="font-medium">Hot events today 🔥</h2>
+          <h2 className="font-medium">Biggest events in Rio de janeiro 🔥</h2>
 
-          <EventCarousel />
+          <BiggestEvents />
         </div>
 
         <div className="space-y-4">

@@ -60,7 +60,7 @@ export function MyTicketsView() {
   return (
     <main className="flex min-h-screen flex-col p-4">
       <div className="w-full max-w-md mx-auto">
-        <BackButton onClick={() => router.push("/dashboard")} />
+        <BackButton onClick={() => router.push("/dashboard  ")} />
 
         <div className="space-y-4">
           <h1 className="text-2xl font-bold">My Tickets</h1>
