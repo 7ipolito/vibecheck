@@ -1,9 +1,7 @@
-import { getServerSession } from "next-auth";
 import dynamic from "next/dynamic";
 import "./globals.css";
 import { MiniKitProvider } from "@/components/MiniKitProvider";
 import { Sora } from "next/font/google";
-import NextAuthProvider from "@/components/next-auth-provider";
 
 const sora = Sora({ subsets: ["latin"] });
 import "@smastrom/react-rating/style.css";
@@ -19,7 +17,6 @@ export default async function RootLayout({
       ssr: false,
     }
   );
-  const session = await getServerSession();
 
   return (
     <html lang="en">

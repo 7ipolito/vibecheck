@@ -60,7 +60,7 @@ export function MyTicketsView() {
   return (
     <main className="flex min-h-screen flex-col p-4">
       <div className="w-full max-w-md mx-auto">
-        <BackButton onClick={() => router.push("/login")} />
+        <BackButton onClick={() => router.push("/dashboard")} />
 
         <div className="space-y-4">
           <h1 className="text-2xl font-bold">My Tickets</h1>
@@ -71,16 +71,18 @@ export function MyTicketsView() {
             </p>
           ) : (
             <div className="grid gap-4">
-              {payments.map((payment: any) => (
+              {payments.map((payment: any, index: number) => (
                 <TicketCard
-                  key={payment._id}
-                  eventName={payment.ticket.event.name}
-                  ticketType={payment.ticket.type}
+                  key={payment._id || `payment-${index}`}
+                  eventName={payment.ticket?.event?.name || "Unknown Event"}
+                  ticketType={payment.ticket?.type || "Unknown Type"}
                   date={new Date(payment.createdAt).toLocaleDateString()}
-                  status={payment.status}
+                  status={payment.status || "pending"}
                   method={payment.method || "pending"}
                   onClick={() => {
-                    window.open(payment.ticket.bucketUrl, "_blank");
+                    if (payment.ticket?.bucketUrl) {
+                      window.open(payment.ticket.bucketUrl, "_blank");
+                    }
                   }}
                 />
               ))}
