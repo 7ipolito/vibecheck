@@ -6,6 +6,7 @@ import { GET_USER_PAYMENTS } from "@/graphql/queries";
 import client from "@/lib/client";
 import { useEffect, useState } from "react";
 import { storage } from "@/lib/storage";
+import { MyTicketsSkeleton } from "@/entities/MyTickets/components/skeletons/MyTicketsSkeleton";
 
 export function MyTicketsView() {
   const router = useRouter();
@@ -21,11 +22,11 @@ export function MyTicketsView() {
           router.push("/login");
           return;
         }
-        console.log(walletAddress);
+
         const { data } = await client.query({
           query: GET_USER_PAYMENTS,
           variables: {
-            walletAddress: walletAddress, // Usando a nova query que espera walletAddress
+            walletAddress: walletAddress,
           },
         });
 
@@ -33,14 +34,6 @@ export function MyTicketsView() {
         setPayments(data.userPayments);
       } catch (error) {
         console.error("Error fetching payments:", error);
-        // Se houver erro na autenticação, redirecionar para login
-        // if (
-        //   error.message.includes("User not found") ||
-        //   error.message.includes("unauthorized")
-        // ) {
-        //   storage.clearWalletAddress();
-        //   router.push("/login");
-        // }
       } finally {
         setLoading(false);
       }
@@ -51,16 +44,16 @@ export function MyTicketsView() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">Loading...</div>
-      </div>
+      <main className="flex min-h-screen flex-col p-4">
+        <MyTicketsSkeleton />
+      </main>
     );
   }
 
   return (
     <main className="flex min-h-screen flex-col p-4">
       <div className="w-full max-w-md mx-auto">
-        <BackButton onClick={() => router.push("/dashboard  ")} />
+        <BackButton onClick={() => router.push("/dashboard")} />
 
         <div className="space-y-4">
           <h1 className="text-2xl font-bold">My Tickets</h1>

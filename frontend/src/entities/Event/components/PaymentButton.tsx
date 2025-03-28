@@ -15,7 +15,11 @@ export function PaymentButton({
   onClick,
 }: PaymentButtonProps) {
   return (
-    <Button className="w-full mb-10" disabled={disabled} onClick={onClick}>
+    <Button
+      onClick={onClick}
+      disabled={disabled}
+      className="w-full py-6 text-lg font-medium bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+    >
       {loading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -1,5 +1,4 @@
-"use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import Header from "@/entities/Dashboard/components/Header";
@@ -10,42 +9,44 @@ import loading from "./loading";
 import { Button } from "@worldcoin/mini-apps-ui-kit-react";
 import BiggestEvents from "@/entities/Dashboard/components/BiggestEvents";
 import { storage } from "@/lib/storage";
+import { CarouselSkeleton } from "@/entities/Dashboard/components/skeletons/CarouselSkeleton";
+import { DatePickerSkeleton } from "@/entities/Dashboard/components/skeletons/DatePickerSkeleton";
+import { HeaderSkeleton } from "@/entities/Dashboard/components/skeletons/HeaderSkeleton";
+import LogoutButton from "@/entities/Dashboard/components/LogoutButton";
 
 function DashboardView() {
-  const router = useRouter();
+  // const router = useRouter();
+  // const [loading, setLoading] = useState(true);
 
-  const handleLogout = async () => {
-    try {
-      // Tenta fazer logout na API
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-      });
+  // useEffect(() => {
+  //   // Simular tempo de carregamento
+  //   const timer = setTimeout(() => {
+  //     setLoading(false);
+  //   }, 2000);
 
-      if (!response.ok) {
-        throw new Error("Logout failed on server");
-      }
+  //   return () => clearTimeout(timer);
+  // }, []);
 
-      // Se o logout na API foi bem sucedido, limpa o localStorage
-      try {
-        storage.clearWalletAddress();
-      } catch (storageError) {
-        console.error("Error clearing local storage:", storageError);
-        // Continua com o redirecionamento mesmo se falhar a limpeza do storage
-      }
+  // if (loading) {
+  //   return (
+  //     <main className="flex min-h-screen flex-col p-4">
+  //       <div className="w-full max-w-md mx-auto space-y-6">
+  //         <HeaderSkeleton />
+  //         <DatePickerSkeleton />
 
-      // Redireciona para login
-      router.push("/login");
-    } catch (error) {
-      console.error("Logout error:", error);
-      // Tenta limpar o storage e redirecionar mesmo se o logout na API falhar
-      try {
-        storage.clearWalletAddress();
-        router.push("/login");
-      } catch (finalError) {
-        console.error("Critical error during logout:", finalError);
-      }
-    }
-  };
+  //         <div className="space-y-4">
+  //           <div className="h-6 w-48 bg-gray-200 rounded animate-pulse" />
+  //           <CarouselSkeleton />
+  //         </div>
+
+  //         <div className="space-y-4">
+  //           <div className="h-6 w-48 bg-gray-200 rounded animate-pulse" />
+  //           <CarouselSkeleton />
+  //         </div>
+  //       </div>
+  //     </main>
+  //   );
+
   return (
     <main className="flex min-h-screen flex-col p-4">
       <div className="w-full max-w-md mx-auto space-y-6">
@@ -70,9 +71,7 @@ function DashboardView() {
           <EventCarousel />
         </div>
 
-        <Button onClick={handleLogout} variant="secondary" size="md">
-          SignOut
-        </Button>
+        <LogoutButton />
       </div>
     </main>
   );

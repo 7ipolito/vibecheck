@@ -1,19 +1,6 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import client from "@/lib/client";
-import { GET_TICKET } from "@/graphql/queries";
-import type { GetTicketParams } from "@/lib/actions/shared.types";
-import { EventDescription } from "@/entities/Event/components/EventDescription";
-import { EventDetails } from "@/entities/Event/components/EventDetails";
-import { EventHeader } from "@/entities/Event/components/EventHeader";
-import { PaymentButton } from "@/entities/Event/components/PaymentButton";
-import {
-  Ticket,
-  TicketSelector,
-} from "@/entities/Event/components/TicketSelection";
-import EventImage from "@/entities/Rating/components/EventImage";
+import { Suspense } from "react";
+import { EventView } from "./EventView";
+import { EventSkeleton } from "@/entities/Event/components/skeletons/EventSkeleton";
 
 interface EventPageProps {
   params: {
@@ -21,88 +8,12 @@ interface EventPageProps {
   };
 }
 
-export default function EventView({ params }: EventPageProps) {
-  const router = useRouter();
-  const [eventData, setEventData] = useState<GetTicketParams | null>(null);
-  const [selectedTicket, setSelectedTicket] = useState<any>("");
-  const [ticketData, setTicketData] = useState<Ticket[]>([]);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const { data } = await client.query({
-          query: GET_TICKET,
-          variables: {
-            findTicketInput: {
-              eventId: params.id,
-            },
-          },
-        });
-
-        console.log("data", data);
-
-        if (!data.tickets || data.tickets.length === 0) {
-          router.push("/dashboard");
-          return;
-        }
-
-        setTicketData(data.tickets || []);
-        setEventData(data.tickets[0] || []);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-        router.push("/");
-      }
-    };
-
-    fetchPosts();
-  }, [router, params.id]);
-
-  const handleTicketSelect = (ticketId: string) => {
-    setSelectedTicket(ticketId);
-  };
-
-  const handleBack = () => {
-    router.back();
-  };
-
-  const handlePayment = () => {
-    if (!selectedTicket) return;
-    router.push(`/payment-selection/${selectedTicket.id}`);
-  };
-
+export default function EventPage({ params }: EventPageProps) {
   return (
     <main className="flex min-h-screen flex-col p-4">
-      <div className="w-full max-w-md mx-auto space-y-6">
-        <EventHeader onBack={handleBack} />
-
-        {eventData?.event && (
-          <>
-            <EventImage
-              src={eventData.event.image}
-              alt={eventData.event.name || "Event image"}
-            />
-
-            <div className="space-y-2">
-              <h1 className="text-2xl font-bold">{eventData.event.name}</h1>
-
-              <EventDetails />
-
-              <EventDescription />
-
-              <TicketSelector
-                ticketData={ticketData}
-                selectedTicket={selectedTicket}
-                onTicketSelect={handleTicketSelect}
-              />
-
-              <PaymentButton
-                disabled={!selectedTicket}
-                onClick={handlePayment}
-              />
-            </div>
-          </>
-        )}
-      </div>
+      <Suspense fallback={<EventSkeleton />}>
+        <EventView params={params} />
+      </Suspense>
     </main>
   );
 }

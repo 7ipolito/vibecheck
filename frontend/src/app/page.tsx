@@ -1,4 +1,3 @@
-"use client";
 import { ClientContent } from "@/components/ClientContent";
 import client from "@/lib/client";
 import { ApolloProvider } from "@apollo/client";

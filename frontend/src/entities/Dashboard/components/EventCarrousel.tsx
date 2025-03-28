@@ -13,6 +13,7 @@ import { GET_POSTS } from "@/graphql/queries";
 import { GetPostParams } from "@/lib/actions/shared.types";
 import client from "@/lib/client"; // Certifique-se de ter configurado o client Apollo corretamente
 import { useRouter } from "next/navigation";
+import { CarouselSkeleton } from "./skeletons/CarouselSkeleton";
 
 export default function EventCarousel() {
   const [postsData, setPostsData] = useState<GetPostParams[]>([]);
@@ -37,14 +38,11 @@ export default function EventCarousel() {
   }, []);
 
   const handleSelect = (event: GetPostParams) => {
-    console.log(event);
     router.push(`/event/${event._id}`);
   };
 
   useEffect(() => {
-    if (!api) {
-      return;
-    }
+    if (!api) return;
 
     const handleSelect = () => {
       setCurrent(api.selectedScrollSnap());
@@ -52,7 +50,6 @@ export default function EventCarousel() {
 
     api.on("select", handleSelect);
 
-    // Auto-advance slides every 3 seconds
     const autoplayInterval = setInterval(() => {
       api.scrollNext();
     }, 10000);
@@ -63,53 +60,55 @@ export default function EventCarousel() {
     };
   }, [api]);
 
+  if (loading) {
+    return <CarouselSkeleton />;
+  }
+
+  if (!postsData.length) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p className="text-lg text-muted">No events found.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
-      {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <p className="text-lg text-muted">Loading events...</p>
-        </div>
-      ) : postsData.length > 0 ? (
-        <Carousel
-          setApi={setApi}
-          className="w-full"
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-        >
-          <CarouselContent>
-            {postsData.map((event, index) => (
-              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                <EventCard
-                  onClick={() => handleSelect(event)}
-                  imageSrc={event.image}
-                  altText={event.name}
-                  title={event.name}
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <div className="flex justify-center gap-1 mt-2">
-            {postsData.map((_, index) => (
-              <button
-                key={index}
-                className={`h-2 w-2 rounded-full transition-colors ${
-                  current === index ? "bg-primary" : "bg-muted"
-                }`}
-                onClick={() => api?.scrollTo(index)}
-                aria-label={`Go to slide ${index + 1}`}
+      <Carousel
+        setApi={setApi}
+        className="w-full"
+        opts={{
+          align: "start",
+          loop: true,
+        }}
+      >
+        <CarouselContent>
+          {postsData.map((event, index) => (
+            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+              <EventCard
+                onClick={() => handleSelect(event)}
+                imageSrc={event.image}
+                altText={event.name}
+                title={event.name}
               />
-            ))}
-          </div>
-          <CarouselPrevious className="hidden sm:flex" />
-          <CarouselNext className="hidden sm:flex" />
-        </Carousel>
-      ) : (
-        <div className="flex justify-center items-center h-64">
-          <p className="text-lg text-muted">No events found.</p>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <div className="flex justify-center gap-1 mt-2">
+          {postsData.map((_, index) => (
+            <button
+              key={index}
+              className={`h-2 w-2 rounded-full transition-colors ${
+                current === index ? "bg-primary" : "bg-muted"
+              }`}
+              onClick={() => api?.scrollTo(index)}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
-      )}
+        <CarouselPrevious className="hidden sm:flex" />
+        <CarouselNext className="hidden sm:flex" />
+      </Carousel>
     </div>
   );
 }

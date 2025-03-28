@@ -18,6 +18,8 @@ import {
   Tokens,
   tokenToDecimals,
 } from "@worldcoin/minikit-js";
+import { id } from "ethers";
+import { WorldCoinPaymentSkeleton } from "@/entities/WorldCoinPayment/components/skeletons/WorldCoinPaymentSkeleton";
 
 export function WorldCoinPaymentView({ params }: any) {
   const router = useRouter();
@@ -170,35 +172,11 @@ export function WorldCoinPaymentView({ params }: any) {
     }
   };
 
-  const handleMakePayment = async () => {
-    if (!verified || !paymentData) return;
-
-    setLoading(true);
-    try {
-      // Fazer o pagamento usando o contrato
-      // const tx = await contract.makePayment(
-      //   paymentData.ticket.event._id,
-      //   paymentData.amount.toString()
-      // );
-      // await tx.wait();
-
-      setPaymentStatus("completed");
-    } catch (error) {
-      console.error("Error processing payment:", error);
-      setPaymentStatus("failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
+      <main className="flex min-h-screen flex-col p-4">
+        <WorldCoinPaymentSkeleton />
+      </main>
     );
   }
 
