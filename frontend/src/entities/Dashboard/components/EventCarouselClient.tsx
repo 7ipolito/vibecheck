@@ -74,6 +74,7 @@ export function EventCarouselClient({
                 imageSrc={event.image}
                 altText={event.name}
                 title={event.name}
+                hasAvailableTickets={false}
               />
             </CarouselItem>
           ))}
