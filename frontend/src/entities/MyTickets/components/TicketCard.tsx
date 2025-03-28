@@ -18,7 +18,6 @@ interface TicketCardProps {
   status: string;
   method: string;
   onClick: () => void;
-  onClickCard: () => void;
 }
 
 export function TicketCard({
@@ -28,7 +27,6 @@ export function TicketCard({
   status,
   method,
   onClick,
-  onClickCard,
 }: TicketCardProps) {
   // Function to determine badge color based on status
   const getStatusColor = (status: string) => {
@@ -64,7 +62,7 @@ export function TicketCard({
           <Badge style={getStatusColor(status)}>{status}</Badge>
         </div>
       </CardHeader>
-      <CardContent onClick={onClickCard}>
+      <CardContent>
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <Tag className="h-4 w-4 text-muted-foreground" />
