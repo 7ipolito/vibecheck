@@ -57,7 +57,8 @@ export default function LoginPage() {
         </div>
         <h1 className="text-3xl font-bold tracking-tight">ReTix</h1>
         <p className="text-muted-foreground">
-          Find and purchase tickets for events selected by special users
+          ReTix is the fast, secure platform for last-minute ticketing and
+          peer-to-peer exchanges, giving you instant event access.
         </p>
 
         <Login />
