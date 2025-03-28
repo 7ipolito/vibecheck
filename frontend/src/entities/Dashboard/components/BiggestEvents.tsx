@@ -102,6 +102,7 @@ export default function BiggestEvents() {
           {mockEvents.map((event, index) => (
             <CarouselItem key={event._id} className="md:basis-1/2 lg:basis-1/3">
               <EventCard
+                hasAvailableTickets={false}
                 onClick={() => handleSelect(event)}
                 imageSrc={event.image}
                 altText={event.name}

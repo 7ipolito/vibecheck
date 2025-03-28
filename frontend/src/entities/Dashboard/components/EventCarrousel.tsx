@@ -60,6 +60,14 @@ export default function EventCarousel() {
     };
   }, [api]);
 
+  // const hasAvailableTickets = (event: GetPostParams) => {
+  //   return (
+  //     event.tickets &&
+  //     event.tickets.length > 0 &&
+  //     event.tickets.some((ticket) => ticket.status !== "sold")
+  //   );
+  // };
+
   if (loading) {
     return <CarouselSkeleton />;
   }
@@ -90,6 +98,7 @@ export default function EventCarousel() {
                 imageSrc={event.image}
                 altText={event.name}
                 title={event.name}
+                hasAvailableTickets={true}
               />
             </CarouselItem>
           ))}

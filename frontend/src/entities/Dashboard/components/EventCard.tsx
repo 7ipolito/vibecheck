@@ -8,6 +8,7 @@ interface EventCardProps {
   date?: string;
   location?: string;
   onClick: () => void;
+  hasAvailableTickets: boolean;
 }
 
 export default function EventCard({
@@ -17,11 +18,16 @@ export default function EventCard({
   date,
   location,
   onClick,
+  hasAvailableTickets,
 }: EventCardProps) {
   return (
     <Card
-      className="overflow-hidden rounded-xl border-2 h-[630px] flex flex-col"
-      onClick={onClick}
+      className={`
+        overflow-hidden rounded-xl border-2 h-[630px] flex flex-col
+        ${!hasAvailableTickets ? "cursor-not-allowed" : "hover:shadow-lg"}
+        transition-all duration-300
+      `}
+      onClick={hasAvailableTickets ? onClick : undefined}
     >
       <CardContent className="p-0 flex-grow relative h-full">
         <div className="relative w-full h-full">
@@ -42,6 +48,10 @@ export default function EventCard({
                 objectFit: "cover", // Corta a imagem para preencher o espaço
                 display: "block", // Remove espaços indesejados abaixo da imagem
               }}
+              className={`
+                ${!hasAvailableTickets ? "opacity-50" : "group-hover:scale-105"}
+                transition-transform duration-300
+              `}
             />
           </div>
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 bg-white">
@@ -52,6 +62,9 @@ export default function EventCard({
               </p>
             )}
           </div>
+          {!hasAvailableTickets && (
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center"></div>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import Header from "@/entities/Dashboard/components/Header";
-import DatePicker from "@/entities/Dashboard/components/DatePicker";
 import EventCarousel from "@/entities/Dashboard/components/EventCarrousel";
 import Stories from "@/entities/Dashboard/components/Stories";
 import loading from "./loading";
@@ -13,6 +12,7 @@ import { CarouselSkeleton } from "@/entities/Dashboard/components/skeletons/Caro
 import { DatePickerSkeleton } from "@/entities/Dashboard/components/skeletons/DatePickerSkeleton";
 import { HeaderSkeleton } from "@/entities/Dashboard/components/skeletons/HeaderSkeleton";
 import LogoutButton from "@/entities/Dashboard/components/LogoutButton";
+import { DatePicker } from "@/entities/Dashboard/components/DatePicker";
 
 function DashboardView() {
   // const router = useRouter();

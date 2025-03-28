@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
@@ -8,24 +9,23 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@radix-ui/react-popover";
+import { useState } from "react";
+import { Label } from "@/components/ui/label";
 
-interface DatePickerProps {
-  date?: Date | null;
-  setDate?: (date: Date | null) => void;
-}
+export function DatePicker() {
+  const [date, setDate] = useState<Date>();
 
-export default function DatePicker({ date, setDate }: DatePickerProps) {
   return (
-    <div className="space-y-2">
-      <p>When do you want to go?</p>
-      <div className="grid grid-cols-2 gap-4">
+    <div className="space-y-2 opacity-50 cursor-not-allowed">
+      <Label className="text-muted-foreground">When do you want go?</Label>
+      <div className="flex gap-2">
         <Popover>
-          <PopoverTrigger asChild>
+          <PopoverTrigger asChild disabled>
             <Button
               variant="outline"
               disabled
               className={cn(
-                "justify-start text-left font-normal",
+                "flex-1 justify-start text-left font-normal cursor-not-allowed",
                 !date && "text-muted-foreground"
               )}
             >
@@ -33,8 +33,23 @@ export default function DatePicker({ date, setDate }: DatePickerProps) {
               {date ? format(date, "PPP") : "Pick a date"}
             </Button>
           </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              disabled
+              initialFocus
+            />
+          </PopoverContent>
         </Popover>
-        <Button variant="outline">Any time</Button>
+        <Button
+          variant="outline"
+          className="flex-1 cursor-not-allowed"
+          disabled
+        >
+          Any time
+        </Button>
       </div>
     </div>
   );
