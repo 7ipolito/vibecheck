@@ -77,7 +77,7 @@ export function MyTicketsView() {
                   eventName={payment.ticket?.event?.name || "Unknown Event"}
                   ticketType={payment.ticket?.type || "Unknown Type"}
                   date={new Date(payment.createdAt).toLocaleDateString()}
-                  status={payment.status || "pending"}
+                  status={"completed"}
                   method={payment.method || "pending"}
                   onClick={() => {
                     if (payment.ticket?.bucketUrl) {

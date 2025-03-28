@@ -49,6 +49,7 @@
     "date-fns": "latest",
     "embla-carousel-react": "8.5.1",
     "eruda": "^3.4.1",
+    "ethers": "^6.13.5",
     "input-otp": "1.4.1",
     "jose": "^6.0.10",
     "lucide-react": "^0.454.0",
