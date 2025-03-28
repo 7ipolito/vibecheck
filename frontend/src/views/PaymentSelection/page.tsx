@@ -17,15 +17,7 @@ import {
 } from "@worldcoin/minikit-js";
 import { log } from "console";
 
-interface PaymentSelectionProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function PaymentSelectionPage({
-  params,
-}: PaymentSelectionProps) {
+export default function PaymentSelectionPage({ params, searchParams }: any) {
   const router = useRouter();
   const [selectedMethod, setSelectedMethod] = useState<
     "pix" | "worldcoin" | null

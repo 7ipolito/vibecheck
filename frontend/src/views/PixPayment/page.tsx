@@ -9,13 +9,7 @@ import PixPayment from "@/entities/PixPayment/components/PixPayment";
 import { createPixPayment } from "@/lib/actions/payment.action";
 import client from "@/lib/client";
 
-interface PixPaymentViewProps {
-  params: {
-    id: string;
-  };
-}
-
-export function PixPaymentView({ params }: PixPaymentViewProps) {
+export function PixPaymentView({ params }: any) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [paymentData, setPaymentData] = useState<any>(null);

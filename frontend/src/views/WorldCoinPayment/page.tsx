@@ -16,13 +16,7 @@ import {
   ISuccessResult,
 } from "@worldcoin/minikit-js";
 
-interface WorldCoinPaymentViewProps {
-  params: {
-    id: string;
-  };
-}
-
-export function WorldCoinPaymentView({ params }: WorldCoinPaymentViewProps) {
+export function WorldCoinPaymentView({ params }: any) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [paymentData, setPaymentData] = useState<any>(null);
@@ -69,7 +63,7 @@ export function WorldCoinPaymentView({ params }: WorldCoinPaymentViewProps) {
     setVerifying(true);
     try {
       const verifyPayload: VerifyCommandInput = {
-        app_id: process.env.NEXT_PUBLIC_APP_ID as `app_${string}`,
+        // app_id: process.env.NEXT_PUBLIC_APP_ID as `app_${string}`,
         action: "payment",
         verification_level: VerificationLevel.Device,
         signal: params.id,

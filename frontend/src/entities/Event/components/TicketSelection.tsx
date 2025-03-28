@@ -40,7 +40,7 @@ export function TicketSelector({
           </p>
           <Select
             onValueChange={onTicketSelect}
-            value={selectedTicket}
+            value={selectedTicket._id}
             disabled={ticketData.length === 0}
           >
             <SelectTrigger className="w-full">
