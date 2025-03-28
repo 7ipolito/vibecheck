@@ -21,7 +21,7 @@ export function PaymentMethodSelector({
     <RadioGroup
       value={selectedMethod || ""}
       onValueChange={(value) => setSelectedMethod(value as "pix" | "worldcoin")}
-      className="space-y-4 "
+      className="space-y-4"
     >
       <PaymentMethodCard
         id="pix"
@@ -29,8 +29,8 @@ export function PaymentMethodSelector({
         selectedMethod={selectedMethod}
         icon={<QrCode className="h-5 w-5 mr-2 text-green-500" />}
         title="PIX"
-        description="Pagamento instantâneo via PIX. Transfira diretamente do seu banco."
-        footer="Processamento instantâneo"
+        description="Instant payment via PIX. Transfer directly from your bank."
+        footer="Instant processing"
       />
 
       <PaymentMethodCard
@@ -39,8 +39,8 @@ export function PaymentMethodSelector({
         selectedMethod={selectedMethod}
         icon={<Globe className="h-5 w-5 mr-2 text-blue-500" />}
         title="WorldCoin"
-        description="Pagamento com WorldCoin. Verifique sua identidade e pague com criptomoeda."
-        footer="Verificação de identidade necessária"
+        description="Pay with WorldCoin. Verify your identity and pay with cryptocurrency."
+        footer="Identity verification required"
       />
     </RadioGroup>
   );

@@ -7,12 +7,14 @@ interface PaymentButtonProps {
   disabled: boolean;
   loading?: boolean;
   onClick: () => void;
+  text?: string;
 }
 
 export function PaymentButton({
   disabled,
   loading,
   onClick,
+  text = "Continue to payment",
 }: PaymentButtonProps) {
   return (
     <Button
@@ -26,7 +28,7 @@ export function PaymentButton({
           Processing...
         </>
       ) : (
-        "Continue to payment"
+        text
       )}
     </Button>
   );

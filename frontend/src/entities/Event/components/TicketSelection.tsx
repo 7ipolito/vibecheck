@@ -57,7 +57,7 @@ export function TicketSelector({
               ))}
             </SelectContent>
           </Select>
-          {selectedTicket && (
+          {/* {selectedTicket && (
             <p className="text-sm font-medium mt-2">
               Selected Type: {selectedTicket.type}
               <br />
@@ -68,7 +68,7 @@ export function TicketSelector({
                   minimumFractionDigits: 2,
                 })}
             </p>
-          )}
+          )} */}
         </div>
       </div>
     </div>

@@ -131,6 +131,20 @@ export default function PaymentSelectionPage({ params }: any) {
     }
   };
 
+  // Função para verificar se o botão deve estar desabilitado
+  const isButtonDisabled = () => {
+    // Desabilita se não houver método selecionado, se estiver carregando
+    // ou se o método selecionado for PIX
+    return !selectedMethod || loading || selectedMethod === "pix";
+  };
+
+  // Função para obter o texto do botão
+  const getButtonText = () => {
+    if (loading) return "Processing...";
+    if (selectedMethod === "pix") return "PIX temporarily unavailable";
+    return "Continue to payment";
+  };
+
   if (!ticketData) {
     return (
       <main className="flex min-h-screen flex-col p-4">
@@ -177,8 +191,9 @@ export default function PaymentSelectionPage({ params }: any) {
         <div className="w-full max-w-md mx-auto">
           <PaymentButton
             onClick={handleContinue}
-            disabled={!selectedMethod || loading}
+            disabled={isButtonDisabled()}
             loading={loading}
+            text={getButtonText()}
           />
         </div>
       </div>
