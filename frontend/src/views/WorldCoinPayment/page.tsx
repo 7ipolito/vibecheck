@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { GET_PAYMENT } from "@/graphql/queries";
+import { GET_PAYMENT, UPDATE_PAYMENT_STATUS } from "@/graphql/queries";
 import client from "@/lib/client";
 import BackButton from "@/components/BackButton";
 import { OrderSummary } from "@/entities/WorldCoinPayment/components/OrderSummary";
@@ -14,6 +14,9 @@ import {
   VerificationLevel,
   MiniKit,
   ISuccessResult,
+  PayCommandInput,
+  Tokens,
+  tokenToDecimals,
 } from "@worldcoin/minikit-js";
 
 export function WorldCoinPaymentView({ params }: any) {
@@ -64,7 +67,7 @@ export function WorldCoinPaymentView({ params }: any) {
     try {
       const verifyPayload: VerifyCommandInput = {
         // app_id: process.env.NEXT_PUBLIC_APP_ID as `app_${string}`,
-        action: "payment",
+        action: "payment-action",
         verification_level: VerificationLevel.Device,
         signal: params.id,
       };
@@ -86,7 +89,7 @@ export function WorldCoinPaymentView({ params }: any) {
         },
         body: JSON.stringify({
           payload: finalPayload as ISuccessResult,
-          action: "payment",
+          action: "payment-action",
           signal: params.id,
         }),
       });
@@ -109,6 +112,64 @@ export function WorldCoinPaymentView({ params }: any) {
     }
   };
 
+  const sendPayment = async () => {
+    const res = await fetch("/api/initiate-payment", {
+      method: "POST",
+    });
+    const { id } = await res.json();
+
+    const payload: PayCommandInput = {
+      reference: id,
+      to: "0x323446c4AD69fF1f85bbd9d62B3Fbe522998f438", // Test address
+      tokens: [
+        {
+          symbol: Tokens.WLD,
+          token_amount: tokenToDecimals(
+            paymentData.amount,
+            Tokens.WLD
+          ).toString(),
+        },
+        {
+          symbol: Tokens.USDCE,
+          token_amount: tokenToDecimals(
+            paymentData.amount,
+            Tokens.USDCE
+          ).toString(),
+        },
+      ],
+      description: "Test example payment for minikit",
+    };
+
+    if (!MiniKit.isInstalled()) {
+      return;
+    }
+
+    const { finalPayload } = await MiniKit.commandsAsync.pay(payload);
+
+    if (finalPayload.status == "success") {
+      const res = await fetch(`/api/confirm-payment`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(finalPayload),
+      });
+
+      const payment = await res.json();
+      console.log("payment", payment);
+
+      if (payment.success) {
+        // Congrats your payment was successful!
+        await client.mutate({
+          mutation: UPDATE_PAYMENT_STATUS,
+          variables: {
+            id: params.id,
+            status: "sold",
+          },
+        });
+        setPaymentStatus("completed");
+      }
+    }
+  };
+
   const handleMakePayment = async () => {
     if (!verified || !paymentData) return;
 
@@ -120,15 +181,6 @@ export function WorldCoinPaymentView({ params }: any) {
       //   paymentData.amount.toString()
       // );
       // await tx.wait();
-
-      // Atualizar o status do pagamento no backend
-      // await client.mutate({
-      //   mutation: UPDATE_PAYMENT_STATUS,
-      //   variables: {
-      //     id: params.id,
-      //     status: "completed",
-      //   },
-      // });
 
       setPaymentStatus("completed");
     } catch (error) {
@@ -178,7 +230,7 @@ export function WorldCoinPaymentView({ params }: any) {
               verifying={verifying}
               loading={loading}
               onVerify={handleVerifyIdentity}
-              onMakePayment={handleMakePayment}
+              onMakePayment={sendPayment}
             />
           )}
         </div>

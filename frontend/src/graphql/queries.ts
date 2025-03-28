@@ -127,3 +127,15 @@ export const GET_USER = gql`
     }
   }
 `;
+
+export const UPDATE_PAYMENT_STATUS = gql`
+  mutation UpdatePaymentStatus($id: String!, $status: String!) {
+    updatePaymentStatus(id: $id, status: $status) {
+      id
+      status
+      method
+      amount
+      createdAt
+    }
+  }
+`;

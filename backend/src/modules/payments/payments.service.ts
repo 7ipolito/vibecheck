@@ -85,7 +85,7 @@ export class PaymentsService {
   }
 
   async findPaymentsByUser(walletAddress: string): Promise<Payment[]> {
-    const user = await this.userModel.findOne({ walletAddress });
+    const user = await this.userModel.findOne({ walletAddress: walletAddress });
 
     if (!user) {
       return [];

@@ -9,18 +9,41 @@ import Stories from "@/entities/Dashboard/components/Stories";
 import loading from "./loading";
 import { Button } from "@worldcoin/mini-apps-ui-kit-react";
 import BiggestEvents from "@/entities/Dashboard/components/BiggestEvents";
+import { storage } from "@/lib/storage";
 
 function DashboardView() {
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth/logout", {
+      // Tenta fazer logout na API
+      const response = await fetch("/api/auth/logout", {
         method: "POST",
       });
+
+      if (!response.ok) {
+        throw new Error("Logout failed on server");
+      }
+
+      // Se o logout na API foi bem sucedido, limpa o localStorage
+      try {
+        storage.clearWalletAddress();
+      } catch (storageError) {
+        console.error("Error clearing local storage:", storageError);
+        // Continua com o redirecionamento mesmo se falhar a limpeza do storage
+      }
+
+      // Redireciona para login
       router.push("/login");
     } catch (error) {
       console.error("Logout error:", error);
+      // Tenta limpar o storage e redirecionar mesmo se o logout na API falhar
+      try {
+        storage.clearWalletAddress();
+        router.push("/login");
+      } catch (finalError) {
+        console.error("Critical error during logout:", finalError);
+      }
     }
   };
   return (

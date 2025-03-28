@@ -8,7 +8,7 @@ export const storage = {
   },
 
   getWalletAddress: () => {
-    return "0x414f9c8d7bb92d91c1d897fa0df4d5d5477593ed";
+    return localStorage.getItem(STORAGE_KEYS.WALLET_ADDRESS);
   },
 
   clearWalletAddress: () => {
