@@ -45,6 +45,6 @@ export class PostService {
   // }
 
   async findAll(): Promise<Post[]> {
-    return await this.postModel.find();
+    return await this.postModel.find().populate('tickets');
   }
 }
