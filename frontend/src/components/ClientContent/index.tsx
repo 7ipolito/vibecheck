@@ -15,11 +15,6 @@ import client from "@/lib/client";
 import { ApolloProvider } from "@apollo/client";
 import Dashboard from "@/app/dashboard/page";
 
-const VersionsNoSSR = dynamic(
-  () => import("./Versions").then((comp) => comp.Versions),
-  { ssr: false }
-);
-
 export const ClientContent = () => {
   const [isI, setIsI] = useState(false);
   useEffect(() => {

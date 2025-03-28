@@ -24,7 +24,7 @@ interface EventPageProps {
 export default function EventView({ params }: EventPageProps) {
   const router = useRouter();
   const [eventData, setEventData] = useState<GetTicketParams | null>(null);
-  const [selectedTicket, setSelectedTicket] = useState<string>("");
+  const [selectedTicket, setSelectedTicket] = useState<any>("");
   const [ticketData, setTicketData] = useState<Ticket[]>([]);
 
   useEffect(() => {

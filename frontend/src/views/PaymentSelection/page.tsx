@@ -9,17 +9,15 @@ import { OrderSummary } from "@/entities/PaymentSelection/components/OrderSummar
 import { GET_TICKET_BY_ID, CREATE_PAYMENT, GET_USER } from "@/graphql/queries";
 import { storage } from "@/lib/storage";
 import client from "@/lib/client";
-import { MiniKit } from "@worldcoin/minikit-js";
+import {
+  MiniKit,
+  VerifyCommandInput,
+  VerificationLevel,
+  ISuccessResult,
+} from "@worldcoin/minikit-js";
+import { log } from "console";
 
-interface PaymentSelectionProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function PaymentSelectionPage({
-  params,
-}: PaymentSelectionProps) {
+export default function PaymentSelectionPage({ params, searchParams }: any) {
   const router = useRouter();
   const [selectedMethod, setSelectedMethod] = useState<
     "pix" | "worldcoin" | null

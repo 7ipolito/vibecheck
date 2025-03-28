@@ -8,14 +8,15 @@ import { OrderSummary } from "@/entities/WorldCoinPayment/components/OrderSummar
 import { PaymentSuccess } from "@/entities/WorldCoinPayment/components/PaymentSuccess";
 import { PaymentFailed } from "@/entities/WorldCoinPayment/components/PaymentFailed";
 import { VerificationForm } from "@/entities/WorldCoinPayment/components/VerificationForm";
+import { useContract } from "@/hooks/useContract";
+import {
+  VerifyCommandInput,
+  VerificationLevel,
+  MiniKit,
+  ISuccessResult,
+} from "@worldcoin/minikit-js";
 
-interface WorldCoinPaymentViewProps {
-  params: {
-    id: string;
-  };
-}
-
-export function WorldCoinPaymentView({ params }: WorldCoinPaymentViewProps) {
+export function WorldCoinPaymentView({ params }: any) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [paymentData, setPaymentData] = useState<any>(null);
@@ -24,15 +25,14 @@ export function WorldCoinPaymentView({ params }: WorldCoinPaymentViewProps) {
   const [paymentStatus, setPaymentStatus] = useState<
     "pending" | "completed" | "failed"
   >("pending");
+  const contract = useContract();
 
   useEffect(() => {
     const fetchPayment = async () => {
       try {
         const { data } = await client.query({
           query: GET_PAYMENT,
-          variables: {
-            id: params.id,
-          },
+          variables: { id: params.id },
         });
 
         if (data?.payment) {
@@ -55,22 +55,81 @@ export function WorldCoinPaymentView({ params }: WorldCoinPaymentViewProps) {
   }, [params.id, router]);
 
   const handleVerifyIdentity = async () => {
+    if (!MiniKit.isInstalled()) {
+      console.error("WorldID is not installed");
+      return;
+    }
+
     setVerifying(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const verifyPayload: VerifyCommandInput = {
+        // app_id: process.env.NEXT_PUBLIC_APP_ID as `app_${string}`,
+        action: "payment",
+        verification_level: VerificationLevel.Device,
+        signal: params.id,
+      };
+
+      const { finalPayload } = await MiniKit.commandsAsync.verify(
+        verifyPayload
+      );
+
+      if (finalPayload.status === "error") {
+        console.error("Verification failed in MiniKit:", finalPayload);
+        throw new Error("Verification failed in World App");
+      }
+
+      // Verificar a prova no backend
+      const verifyResponse = await fetch("/api/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          payload: finalPayload as ISuccessResult,
+          action: "payment",
+          signal: params.id,
+        }),
+      });
+
+      const verificationData = await verifyResponse.json();
+
+      if (!verificationData.verifyRes.success) {
+        throw new Error(
+          verificationData.verifyRes.detail || "Verification failed"
+        );
+      }
+
       setVerified(true);
-    } catch (error) {
-      console.error("Error verifying identity:", error);
+      console.log("Identity verified successfully!");
+    } catch (error: any) {
+      console.error("Error during verification:", error);
+      setPaymentStatus("failed");
     } finally {
       setVerifying(false);
     }
   };
 
   const handleMakePayment = async () => {
-    if (!verified) return;
+    if (!verified || !paymentData) return;
+
     setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2500));
+      // Fazer o pagamento usando o contrato
+      // const tx = await contract.makePayment(
+      //   paymentData.ticket.event._id,
+      //   paymentData.amount.toString()
+      // );
+      // await tx.wait();
+
+      // Atualizar o status do pagamento no backend
+      // await client.mutate({
+      //   mutation: UPDATE_PAYMENT_STATUS,
+      //   variables: {
+      //     id: params.id,
+      //     status: "completed",
+      //   },
+      // });
+
       setPaymentStatus("completed");
     } catch (error) {
       console.error("Error processing payment:", error);
@@ -91,9 +150,7 @@ export function WorldCoinPaymentView({ params }: WorldCoinPaymentViewProps) {
     );
   }
 
-  if (!paymentData) {
-    return null;
-  }
+  if (!paymentData) return null;
 
   return (
     <main className="flex min-h-screen flex-col p-4">
