@@ -16,6 +16,8 @@ import {
   ISuccessResult,
 } from "@worldcoin/minikit-js";
 import { log } from "console";
+import { PaymentButton } from "@/entities/Event/components/PaymentButton";
+import { PaymentSelectionSkeleton } from "@/entities/PaymentSelection/components/skeletons/PaymentSelectionSkeleton";
 
 export default function PaymentSelectionPage({ params }: any) {
   const router = useRouter();
@@ -129,53 +131,56 @@ export default function PaymentSelectionPage({ params }: any) {
     }
   };
 
-  if (!userId) {
+  if (!ticketData) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="text-muted-foreground">Loading...</p>
+      <main className="flex min-h-screen flex-col p-4">
+        <PaymentSelectionSkeleton />
+
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t">
+          <div className="w-full max-w-md mx-auto">
+            <PaymentButton onClick={() => {}} disabled={true} loading={false} />
+          </div>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
     <main className="flex min-h-screen flex-col p-4">
-      <div className="w-full max-w-md mx-auto space-y-6">
+      <div className="w-full max-w-md mx-auto space-y-6 pb-24">
         <Button
           variant="ghost"
-          className="mb-4 p-0 hover:bg-transparent"
+          className="p-0 hover:bg-transparent"
           onClick={handleBack}
         >
           <ArrowLeft className="h-6 w-6 mr-2" />
           Back
         </Button>
 
-        {ticketData && (
-          <div>
-            <h1 className="text-2xl font-bold">Choose Payment Method</h1>
+        <div>
+          <h1 className="text-2xl font-bold">Choose Payment Method</h1>
 
-            <OrderSummary
-              eventName={ticketData.event.name}
-              ticketType={ticketData.type}
-              price={ticketData.price}
-            />
+          <OrderSummary
+            eventName={ticketData.event.name}
+            ticketType={ticketData.type}
+            price={ticketData.price}
+          />
 
-            <PaymentMethodSelector
-              selectedMethod={selectedMethod}
-              setSelectedMethod={setSelectedMethod}
-            />
+          <PaymentMethodSelector
+            selectedMethod={selectedMethod}
+            setSelectedMethod={setSelectedMethod}
+          />
+        </div>
+      </div>
 
-            <Button
-              onClick={handleContinue}
-              className="w-full py-6 mt-8 text-lg font-medium bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-              disabled={!selectedMethod || loading}
-            >
-              {loading ? "Processing..." : "Continue to payment"}
-            </Button>
-          </div>
-        )}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t">
+        <div className="w-full max-w-md mx-auto">
+          <PaymentButton
+            onClick={handleContinue}
+            disabled={!selectedMethod || loading}
+            loading={loading}
+          />
+        </div>
       </div>
     </main>
   );

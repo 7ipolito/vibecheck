@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Globe, Check } from "lucide-react";
+import { RefreshCw, Globe, Check, User } from "lucide-react";
 import Image from "next/image";
 import { MiniKit } from "@worldcoin/minikit-js";
 
@@ -86,13 +86,19 @@ export function VerificationForm({
   return (
     <div className="flex flex-col items-center justify-center p-6 border rounded-lg">
       <div className="mb-4">
-        <Image
-          src={MiniKit.user?.profilePictureUrl!}
-          alt="WorldCoin Logo"
-          width={100}
-          height={100}
-          className="rounded-full"
-        />
+        {MiniKit.user?.profilePictureUrl ? (
+          <Image
+            src={MiniKit.user.profilePictureUrl}
+            alt="WorldCoin Logo"
+            width={100}
+            height={100}
+            className="rounded-full"
+          />
+        ) : (
+          <div className="w-[100px] h-[100px] rounded-full bg-muted flex items-center justify-center">
+            <User className="w-12 h-12 text-muted-foreground" />
+          </div>
+        )}
       </div>
 
       {!verified ? (

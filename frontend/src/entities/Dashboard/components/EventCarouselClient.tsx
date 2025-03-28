@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Carousel,
   CarouselContent,
@@ -9,56 +10,20 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import EventCard from "@/entities/Dashboard/components/EventCard";
-import { useRouter } from "next/navigation";
-import { CarouselSkeleton } from "@/entities/Dashboard/components/skeletons/CarouselSkeleton";
+import { GetPostParams } from "@/lib/actions/shared.types";
 
-// Dados mockados dos eventos
-const mockEvents = [
-  {
-    _id: "1",
-    name: "Web3 Conference 2024",
-    description: "The biggest Web3 conference in Latin America",
-    image:
-      "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=2940&auto=format&fit=crop",
-    date: "2024-05-15",
-    location: "Rio de Janeiro, RJ",
-  },
-  {
-    _id: "2",
-    name: "Blockchain Summit",
-    description: "Explore the future of blockchain technology",
-    image:
-      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2940&auto=format&fit=crop",
-    date: "2024-06-20",
-    location: "São Paulo, SP",
-  },
-  {
-    _id: "3",
-    name: "Crypto Festival",
-    description: "Music, art and cryptocurrency",
-    image:
-      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2940&auto=format&fit=crop",
-    date: "2024-07-10",
-    location: "Florianópolis, SC",
-  },
-  {
-    _id: "4",
-    name: "NFT Art Exhibition",
-    description: "The largest NFT art exhibition in Brazil",
-    image:
-      "https://images.unsplash.com/photo-1638913662295-9630035ef770?q=80&w=2940&auto=format&fit=crop",
-    date: "2024-08-05",
-    location: "Belo Horizonte, MG",
-  },
-];
+interface EventCarouselClientProps {
+  initialEvents: GetPostParams[];
+}
 
-export default function BiggestEvents() {
-  const [loading, setLoading] = useState(true);
+export function EventCarouselClient({
+  initialEvents,
+}: EventCarouselClientProps) {
   const [api, setApi] = useState<any>();
   const [current, setCurrent] = useState(0);
   const router = useRouter();
 
-  const handleSelect = (event: any) => {
+  const handleSelect = (event: GetPostParams) => {
     router.push(`/event/${event._id}`);
   };
 
@@ -73,7 +38,6 @@ export default function BiggestEvents() {
 
     api.on("select", handleSelect);
 
-    // Auto-advance slides every 10 seconds
     const autoplayInterval = setInterval(() => {
       api.scrollNext();
     }, 10000);
@@ -84,9 +48,13 @@ export default function BiggestEvents() {
     };
   }, [api]);
 
-  // if (loading) {
-  //   return <CarouselSkeleton />;
-  // }
+  if (initialEvents.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p className="text-lg text-muted-foreground">No events found.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -99,7 +67,7 @@ export default function BiggestEvents() {
         }}
       >
         <CarouselContent>
-          {mockEvents.map((event, index) => (
+          {initialEvents.map((event) => (
             <CarouselItem key={event._id} className="md:basis-1/2 lg:basis-1/3">
               <EventCard
                 onClick={() => handleSelect(event)}
@@ -111,7 +79,7 @@ export default function BiggestEvents() {
           ))}
         </CarouselContent>
         <div className="flex justify-center gap-1 mt-2">
-          {mockEvents.map((_, index) => (
+          {initialEvents.map((_, index) => (
             <button
               key={index}
               className={`h-2 w-2 rounded-full transition-colors ${

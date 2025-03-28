@@ -1,4 +1,3 @@
-"use client";
 import { MiniKit } from "@worldcoin/minikit-js";
 // import {
 //   GetSearchedUsernameResult,
@@ -11,14 +10,7 @@ import { useEffect, useState } from "react";
 import { WalletAuth } from "./WalletAuth";
 import { Login } from "@/features/Auth/Login";
 import LoginPage from "@/app/login/page";
-import client from "@/lib/client";
-import { ApolloProvider } from "@apollo/client";
-import Dashboard from "@/app/dashboard/page";
 
 export const ClientContent = () => {
-  const [isI, setIsI] = useState(false);
-  useEffect(() => {
-    setIsI(MiniKit.isInstalled());
-  }, []);
   return <LoginPage />;
 };
