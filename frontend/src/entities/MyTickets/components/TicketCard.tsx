@@ -18,6 +18,7 @@ interface TicketCardProps {
   status: string;
   method: string;
   onClick: () => void;
+  onClickCard: () => void;
 }
 
 export function TicketCard({
@@ -27,11 +28,12 @@ export function TicketCard({
   status,
   method,
   onClick,
+  onClickCard,
 }: TicketCardProps) {
   // Function to determine badge color based on status
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case "completed":
+      case "sold":
         return {
           backgroundColor: "#22c55e", // green-500
           color: "white",
@@ -62,7 +64,7 @@ export function TicketCard({
           <Badge style={getStatusColor(status)}>{status}</Badge>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent onClick={onClickCard}>
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <Tag className="h-4 w-4 text-muted-foreground" />
@@ -86,12 +88,10 @@ export function TicketCard({
           onClick={onClick}
           className="w-full gap-2"
           variant="default"
-          disabled={status.toLowerCase() !== "completed"}
+          disabled={status.toLowerCase() !== "sold"}
         >
           <Ticket className="h-4 w-4" />
-          {status.toLowerCase() === "completed"
-            ? "See tickets"
-            : "Payment pending"}
+          {status.toLowerCase() === "sold" ? "See ticket" : "Payment pending"}
         </Button>
       </CardFooter>
     </Card>

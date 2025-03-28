@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { GET_PAYMENT } from "@/graphql/queries";
+import { GET_PAYMENT, UPDATE_PAYMENT_STATUS } from "@/graphql/queries";
 import client from "@/lib/client";
 import BackButton from "@/components/BackButton";
 import { OrderSummary } from "@/entities/WorldCoinPayment/components/OrderSummary";
@@ -124,11 +124,17 @@ export function WorldCoinPaymentView({ params }: any) {
       tokens: [
         {
           symbol: Tokens.WLD,
-          token_amount: tokenToDecimals(0.1, Tokens.WLD).toString(),
+          token_amount: tokenToDecimals(
+            paymentData.amount,
+            Tokens.WLD
+          ).toString(),
         },
         {
           symbol: Tokens.USDCE,
-          token_amount: tokenToDecimals(0.1, Tokens.USDCE).toString(),
+          token_amount: tokenToDecimals(
+            paymentData.amount,
+            Tokens.USDCE
+          ).toString(),
         },
       ],
       description: "Test example payment for minikit",
@@ -146,11 +152,19 @@ export function WorldCoinPaymentView({ params }: any) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(finalPayload),
       });
+
       const payment = await res.json();
       console.log("payment", payment);
 
       if (payment.success) {
         // Congrats your payment was successful!
+        await client.mutate({
+          mutation: UPDATE_PAYMENT_STATUS,
+          variables: {
+            id: params.id,
+            status: "sold",
+          },
+        });
         setPaymentStatus("completed");
       }
     }
@@ -167,15 +181,6 @@ export function WorldCoinPaymentView({ params }: any) {
       //   paymentData.amount.toString()
       // );
       // await tx.wait();
-
-      // Atualizar o status do pagamento no backend
-      // await client.mutate({
-      //   mutation: UPDATE_PAYMENT_STATUS,
-      //   variables: {
-      //     id: params.id,
-      //     status: "completed",
-      //   },
-      // });
 
       setPaymentStatus("completed");
     } catch (error) {

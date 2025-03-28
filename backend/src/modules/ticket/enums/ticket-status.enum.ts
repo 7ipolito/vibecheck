@@ -1,6 +1,6 @@
 export enum TicketStatus {
   AVAILABLE = 'available',
   SOLD = 'sold',
-  RESERVED = 'reserved',
+  PENDING = 'pending',
   CANCELLED = 'cancelled',
 }

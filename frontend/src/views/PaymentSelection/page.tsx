@@ -97,6 +97,8 @@ export default function PaymentSelectionPage({ params }: any) {
     if (!selectedMethod || !ticketData || !userId) return;
 
     setLoading(true);
+
+    console.log("id", params.id);
     try {
       const { data } = await client.mutate({
         mutation: CREATE_PAYMENT,
