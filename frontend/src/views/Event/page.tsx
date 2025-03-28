@@ -39,6 +39,8 @@ export default function EventView({ params }: EventPageProps) {
           },
         });
 
+        console.log("data", data);
+
         if (!data.tickets || data.tickets.length === 0) {
           router.push("/dashboard");
           return;

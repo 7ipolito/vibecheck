@@ -100,7 +100,7 @@ export const Login = () => {
           // Salvar walletAddress após criar usuário
           storage.setWalletAddress(MiniKit.user.walletAddress);
 
-          console.log(createUserResponse);
+          console.log(storage.getWalletAddress());
 
           // Redireciona somente se a criação do usuário foi bem-sucedida
           router.push("/dashboard");

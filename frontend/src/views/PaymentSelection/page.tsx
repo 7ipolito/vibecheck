@@ -17,7 +17,7 @@ import {
 } from "@worldcoin/minikit-js";
 import { log } from "console";
 
-export default function PaymentSelectionPage({ params, searchParams }: any) {
+export default function PaymentSelectionPage({ params }: any) {
   const router = useRouter();
   const [selectedMethod, setSelectedMethod] = useState<
     "pix" | "worldcoin" | null
@@ -32,6 +32,7 @@ export default function PaymentSelectionPage({ params, searchParams }: any) {
         const walletAddress = storage.getWalletAddress();
 
         if (!walletAddress) {
+          console.log(walletAddress);
           console.error("No wallet address found in storage");
           router.push("/login");
           return;
@@ -45,6 +46,8 @@ export default function PaymentSelectionPage({ params, searchParams }: any) {
             },
           },
         });
+
+        console.log("data", data);
 
         if (data.whoami) {
           console.log("User found:", data.whoami);
